@@ -812,7 +812,8 @@ button {
 }
 .mobile-show.section-advanced-platform h2 {
 	max-width: 100%;
-	padding-bottom: 16px
+	padding-bottom: 20px;
+	padding-top: 20px;
 }
 .mobile-show.section-advanced-platform .step-list .step-item {
 	height: auto
@@ -916,7 +917,9 @@ button {
     	max-width: 80px!important;
 	}
 	#header .header .navi-list img {
-    	max-width: 100px!important;
+    	max-width: 80px!important;
+    	margin: auto 0;
+    	vertical-align: middle;
 	}	
 }
 #header {
@@ -5724,7 +5727,7 @@ body.desktop .q-stepper-tab.step-navigation:hover {
 }
 .block {
 	display: block!important;
-	margin: auto;
+	margin: 20px auto;
 	width: 70%;
 }
 .inline-block {
@@ -5951,8 +5954,7 @@ h1 {
 	.mobile-show.section-slogan h1 {
     font-size: 28px;
     max-width: 100%;
-    margin: 0 auto;
-    padding-bottom: 8px;
+    margin: 20px auto 0 auto;
     text-align: center;
 	}
 }
@@ -6349,7 +6351,8 @@ body.cordova .cordova-hide, body.desktop .desktop-hide, body.electron .electron-
     	max-width: 100px!important;
 	}
 	#header .header .navi-list img {
-    	max-width: 140px!important;
+    	max-width: 100px!important;
+    	vertical-align: middle;
 	}	
 }
 @media (min-width:992px) and (max-width:1199px) {
@@ -6360,7 +6363,9 @@ body.cordova .cordova-hide, body.desktop .desktop-hide, body.electron .electron-
     	max-width: 120px!important;
 	}
 	#header .header .navi-list img {
-    	max-width: 120px!important;
+    	max-width: 100px!important;
+       	vertical-align: middle;
+
 	}	
 }
 @media (min-width:1200px) {

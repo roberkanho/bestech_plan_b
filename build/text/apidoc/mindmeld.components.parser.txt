@@ -1,0 +1,71 @@
+mindmeld.components.parser module
+*********************************
+
+This module contains the language parser component of the MindMeld
+natural language processor
+
+class mindmeld.components.parser.Parser(resource_loader=None, config=None, allow_relaxed=True, domain=None, intent=None)
+
+   Bases: "object"
+
+   A language parser which is used to extract relations between
+   entities in a given query and group related entities together.
+
+   The parser uses a context free grammar based on a configuration to
+   generate candidate entity groupings. Heuristics are then used to
+   rank and select a grouping.
+
+   This rule based parser will be helpful in many situations, but if
+   you have a sufficiently sophisticated entity hierarchy, you may
+   benefit from using a statistical approach.
+
+   config
+
+      *dict* – The parser config.
+
+   parse_entities(query, entities, all_candidates=False, handle_timeout=True, timeout=2.0)
+
+      Determines groupings of entities for the given query.
+
+      Parameters:
+         * **query** (*Query*) – The query being parsed.
+
+         * **entities** (*list**[**QueryEntity**]*) – The entities
+           to find groupings for.
+
+         * **all_candidates** (*bool**, **optional*) – Whether to
+           return all the entity candidates.
+
+         * **handle_timeout** (*bool**, **optional*) – False if an
+           exception should be raised in the event of a parsing times
+           out. Defaults to True.
+
+         * **timeout** (*float**, **optional*) – The amount of time
+           to wait for the parsing to complete. By default this is set
+           to MAX_PARSE_TIME. If None is passed, the passing will
+           never time out
+
+      Returns:
+         An updated version of the entities collection passed in with
+         their parent and children attributes set appropriately.
+
+      Return type:
+         (tuple[QueryEntity])
+
+mindmeld.components.parser.generate_grammar(config, entity_types=None, relaxed=False, unique_entities=20)
+
+   Generates a feature context free grammar from the provided parser
+   config.
+
+   Parameters:
+      * **config** (*dict*) – The parser configuration
+
+      * **unique_entities** (*int**, **optional*) – The number of
+        entities of the same type that should be permitted in the same
+        query
+
+   Returns:
+      a string containing the grammar with rules separated by line
+
+   Return type:
+      str

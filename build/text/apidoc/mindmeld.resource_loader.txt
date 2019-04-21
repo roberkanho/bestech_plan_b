@@ -1,0 +1,287 @@
+mindmeld.resource_loader module
+*******************************
+
+This module contains the processor resource loader.
+
+class mindmeld.resource_loader.Hasher(algorithm='sha1')
+
+   Bases: "object"
+
+   An thin wrapper around hashlib. Uses cache for commonly hashed
+   strings.
+
+   algorithm
+
+      *str* – The hashing algorithm to use. Defaults to ‘sha1’. See
+      *hashlib.algorithms_available* for a list of options.
+
+   hash(string)
+
+      Hashes a string.
+
+      Parameters:
+         **string** (*str*) – The string to hash
+
+      Returns:
+         The hash result
+
+      Return type:
+         str
+
+   hash_file(filename)
+
+      Creates a hash of the file. If the file does not exist, use the
+      empty string instead and return the resulting hash digest.
+
+      Parameters:
+         **filename** (*str*) – The path of a file to hash.
+
+      Returns:
+         A hex digest of the file hash
+
+      Return type:
+         str
+
+   hash_list(strings)
+
+      Hashes a list of strings.
+
+      Parameters:
+         **strings** (*list**[**str**]*) – The strings to hash
+
+      Returns:
+         The hash result
+
+      Return type:
+         str
+
+   algorithm
+
+      Getter for algorithm property.
+
+      Returns:
+         the hashing algorithm
+
+      Return type:
+         str
+
+class mindmeld.resource_loader.ResourceLoader(app_path, query_factory, query_cache=None)
+
+   Bases: "object"
+
+   ResourceLoader objects are responsible for loading resources
+   necessary for nlp components (classifiers, entity recognizer,
+   parsers, etc).
+
+   Note: we need to keep resource helpers as instance methods, as
+   "load_feature_resource" assumes all helpers to be instance methods.
+
+   build_gazetteer(gaz_name, exclude_ngrams=False, force_reload=False)
+
+      Builds the specified gazetteer using the entity data and mapping
+      files.
+
+      Parameters:
+         * **gaz_name** (*str*) – The name of the entity the
+           gazetteer corresponds to
+
+         * **exclude_ngrams** (*bool**, **optional*) – Whether
+           partial matches of entities should be included in the
+           gazetteer
+
+         * **force_reload** (*bool**, **optional*) – Whether file
+           should be forcefully reloaded from disk
+
+   static create_resource_loader(app_path, query_factory=None, preprocessor=None)
+
+      Creates the resource loader for the app at app path.
+
+      Parameters:
+         * **app_path** (*str*) – The path to the directory
+           containing the app’s data
+
+         * **query_factory** (*QueryFactory*) – The app’s query
+           factory
+
+         * **preprocessor** (*Preprocessor*) – The app’s
+           preprocessor
+
+      Returns:
+         a resource loader
+
+      Return type:
+         ResourceLoader
+
+   static flatten_query_tree(query_tree)
+
+      Takes a query tree and returns the elements in list form.
+
+      Parameters:
+         **query_tree** (*dict*) – A nested dictionary that organizes
+         queries by domain then intent.
+
+      Returns:
+         A list of Query objects.
+
+      Return type:
+         list
+
+   get_entity_map(entity_type, force_reload=False)
+
+      Creates a mapping file for a given entity.
+
+      Parameters:
+         **entity_type** (*str*) – The name of the entity
+
+   get_gazetteer(gaz_name, force_reload=False)
+
+      Gets a gazetteers by name.
+
+      Parameters:
+         **gaz_name** (*str*) – The name of the entity the gazetteer
+         corresponds to
+
+      Returns:
+         Gazetteer data
+
+      Return type:
+         dict
+
+   get_gazetteer_hash(gaz_name)
+
+      Gets the hash of a gazetteer by entity name.
+
+      Parameters:
+         **gaz_name** (*str*) – The name of the entity the gazetteer
+         corresponds to
+
+      Returns:
+         Hash of a gazetteer specified by name.
+
+      Return type:
+         str
+
+   get_gazetteers(force_reload=False, **kwargs)
+
+      Gets gazetteers for all entities.
+
+      Returns:
+         Gazetteer data keyed by entity type
+
+      Return type:
+         dict
+
+   get_gazetteers_hash()
+
+      Gets a single hash of all the gazetteer ordered by alphabetical
+      entity type.
+
+      Returns:
+         Hash of a list of gazetteer hashes.
+
+      Return type:
+         str
+
+   get_labeled_queries(domain=None, intent=None, label_set=None, force_reload=False, raw=False)
+
+      Gets labeled queries from the cache, or loads them from disk.
+
+      Parameters:
+         * **domain** (*str*) – The domain of queries to load
+
+         * **intent** (*str*) – The intent of queries to load
+
+         * **force_reload** (*bool*) – Will not load queries from
+           the cache when True
+
+         * **raw** (*bool*) – Will return raw query strings instead
+           of ProcessedQuery objects when true
+
+      Returns:
+         ProcessedQuery objects (or strings) loaded from labeled query
+         files, organized by
+            domain and intent.
+
+      Return type:
+         dict
+
+   hash_feature_resource(name)
+
+      Hashes the named resource.
+
+      Parameters:
+         **name** (*str*) – The name of the resource to hash
+
+      Returns:
+         The hash result
+
+      Return type:
+         str
+
+   hash_list(items)
+
+      Hashes the list of items.
+
+      Parameters:
+         **items** (*list**[**str**]*) – A list of strings to hash
+
+      Returns:
+         The hash result
+
+      Return type:
+         str
+
+   hash_string(string)
+
+      Hashes a string.
+
+      Parameters:
+         **string** (*str*) – The string to hash
+
+      Returns:
+         The hash result
+
+      Return type:
+         str
+
+   load_entity_map(entity_type)
+
+      Loads an entity mapping file.
+
+      Parameters:
+         **entity_type** (*str*) – The name of the entity
+
+   load_feature_resource(name, **kwargs)
+
+      Load specified resource for feature extractor.
+
+      Parameters:
+         **name** (*str*) – resource name
+
+   load_gazetteer(gaz_name)
+
+      Loads a gazetteer specified by the entity name.
+
+      Parameters:
+         **gaz_name** (*str*) – The name of the entity the gazetteer
+         corresponds to
+
+   load_query_file(domain, intent, file_path, raw=False)
+
+      Loads the queries from the specified file.
+
+      Parameters:
+         * **domain** (*str*) – The domain of the query file
+
+         * **intent** (*str*) – The intent of the query file
+
+         * **file_path** (*str*) – The name of the query file
+
+   FEATURE_RSC_MAP = {'gazetteers': <function ResourceLoader.get_gazetteers>, 'w_freq': <function ResourceLoader._build_word_freq_dict>, 'c_ngram_freq': <function ResourceLoader._build_char_ngram_freq_dict>, 'w_ngram_freq': <function ResourceLoader._build_word_ngram_freq_dict>, 'q_freq': <function ResourceLoader._build_query_freq_dict>, 'sys_types': <function ResourceLoader._get_sys_entity_types>}
+
+   RSC_HASH_MAP = {'gazetteers': <function ResourceLoader.get_gazetteers_hash>, 'w_freq': <function ResourceLoader.<lambda>>, 'w_ngram_freq': <function ResourceLoader.<lambda>>, 'c_ngram_freq': <function ResourceLoader.<lambda>>, 'q_freq': <function ResourceLoader.<lambda>>, 'sys_types': <function ResourceLoader.<lambda>>, 'enable-stemming': <function ResourceLoader.<lambda>>}
+
+   hash_to_model_path
+
+      *dict* – A dictionary that maps hashes to the file path of the
+      classifier.

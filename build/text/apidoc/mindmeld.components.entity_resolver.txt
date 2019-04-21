@@ -1,0 +1,89 @@
+mindmeld.components.entity_resolver module
+******************************************
+
+This module contains the entity resolver component of the MindMeld
+natural language processor.
+
+class mindmeld.components.entity_resolver.EntityResolver(app_path, resource_loader, entity_type, es_host=None, es_client=None)
+
+   Bases: "object"
+
+   An entity resolver is used to resolve entities in a given query to
+   their canonical values (usually linked to specific entries in a
+   knowledge base).
+
+   fit(clean=False)
+
+      Loads an entity mapping file to Elasticsearch for text relevance
+      based entity resolution.
+
+      In addition, the synonyms in entity mapping are imported to
+      knowledge base indexes if the corresponding knowledge base
+      object index and field name are specified for the entity type.
+      The synonym info is then used by Question Answerer for text
+      relevance matches.
+
+      Parameters:
+         **clean** (*bool*) – If "True", deletes and recreates the
+         index from scratch instead of updating the existing index
+         with synonyms in the mapping.json.
+
+   classmethod ingest_synonym(app_namespace, index_name, index_type='syn', field_name=None, data=None, es_host=None, es_client=None, use_double_metaphone=False)
+
+      Loads synonym documents from the mapping.json data into the
+      specified index. If an index with the specified name doesn’t
+      exist, a new index with that name will be created.
+
+      Parameters:
+         * **app_namespace** (*str*) – The namespace of the app.
+           Used to prevent collisions between the indices of this app
+           and those of other apps.
+
+         * **index_name** (*str*) – The name of the new index to be
+           created.
+
+         * **index_type** (*str*) – specify whether to import to
+           synonym index or knowledge base object index.
+           INDEX_TYPE_SYNONYM is the default which indicates the
+           synonyms to be imported to synonym index, while
+           INDEX_TYPE_KB indicates that the synonyms should be
+           imported into existing knowledge base index.
+
+         * **field_name** (*str*) – specify name of the knowledge
+           base field that the synonym list corresponds to when
+           index_type is INDEX_TYPE_SYNONYM.
+
+         * **data** (*list*) – A list of documents to be loaded into
+           the index.
+
+         * **es_host** (*str*) – The Elasticsearch host server.
+
+         * **es_client** (*Elasticsearch*) – The Elasticsearch
+           client.
+
+         * **use_double_metaphone** (*bool*) – Whether to use the
+           phonetic mapping or not.
+
+   load()
+
+      Loads the trained entity resolution model from disk.
+
+   predict(entity)
+
+      Predicts the resolved value(s) for the given entity using the
+      loaded entity map or the trained entity resolution model.
+
+      Parameters:
+         **entity** (*Entity**, **tuple*) – An entity found in an
+         input query, or a list of n-best entity
+         objects.
+
+      Returns:
+         The top 20 resolved values for the provided entity.
+
+      Return type:
+         (list)
+
+   ES_SYNONYM_INDEX_PREFIX = 'synonym'
+
+      The prefix of the ES index.

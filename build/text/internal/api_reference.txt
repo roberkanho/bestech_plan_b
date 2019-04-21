@@ -1,0 +1,9 @@
+API Reference
+*************
+
+This is the class and function reference of MindMeld Workbench. Please
+refer to the User Guide for further details, as the class and function
+raw specifications may not be enough to give full guidelines on their
+uses.
+
+   * Module Index

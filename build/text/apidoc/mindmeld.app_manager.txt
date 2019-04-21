@@ -1,0 +1,129 @@
+mindmeld.app_manager module
+***************************
+
+This module contains the application manager
+
+class mindmeld.app_manager.ApplicationManager(app_path, nlp=None, question_answerer=None, es_host=None, request_class=None, responder_class=None, preprocessor=None, async_mode=False)
+
+   Bases: "object"
+
+   The Application Manager is the core orchestrator of the MindMeld
+   platform. It receives     a client request, and processes that
+   request by passing it through all the necessary     components of
+   MindMeld. Once processing is complete, the application manager
+   returns     the final response back to the client.
+
+   async_mode
+
+      *bool* – Whether the application is asynchronous or synchronous.
+
+   nlp
+
+      *NaturalLanguageProcessor* – The natural language processor.
+
+   question_answerer
+
+      *QuestionAnswerer* – The question answerer.
+
+   request_class
+
+      *Request* – Any class that inherits                 from Request
+
+   responder_class
+
+      *DialogueResponder* – Any class                 that inherits
+      from the DialogueResponder
+
+   dialogue_manager
+
+      *DialogueManager* – The application’s dialogue manager.
+
+   add_dialogue_rule(name, handler, **kwargs)
+
+      Adds a dialogue rule for the dialogue manager.
+
+      Parameters:
+         * **name** (*str*) – The name of the dialogue state
+
+         * **handler** (*function*) – The dialogue state handler
+           function
+
+         * **kwargs** (*dict*) – A list of options which specify the
+           dialogue rule
+
+   add_middleware(middleware)
+
+      Adds middleware for the dialogue manager.
+
+      Parameters:
+         **middleware** (*callable*) – A dialogue manager middleware
+         function
+
+   load()
+
+      Loads all resources required to run a MindMeld application.
+
+   parse(text, params=None, context=None, frame=None, history=None, verbose=False)
+
+      Parameters:
+         * **text** (*str*) – The text of the message sent by the
+           user
+
+         * **params** (*Params/dict**, **optional*) – Contains
+           parameters which modify how text is parsed
+
+         * **params.allowed_intents** (*list**, **optional*) – A
+           list of allowed intents                 for model
+           consideration
+
+         * **params.target_dialogue_state** (*str**, **optional*) –
+           The target dialogue state
+
+         * **params.time_zone** (*str**, **optional*) – The name of
+           an IANA time zone, such as ‘America/Los_Angeles’, or
+           ‘Asia/Kolkata’ See the [tz database](https://www.iana.org
+           /time-zones) for more information.
+
+         * **params.timestamp** (*long**, **optional*) – A unix time
+           stamp for the request (in seconds).
+
+         * **frame** (*dict**, **optional*) – A dictionary
+           specifying the frame of the conversation
+
+         * **context** (*dict**, **optional*) – A dictionary of app-
+           specific data
+
+         * **history** (*list**, **optional*) – A list of previous
+           and current responder objects through interactions with
+           MindMeld
+
+         * **verbose** (*bool**, **optional*) – Flag to return
+           confidence scores for domains and intents
+
+      Returns:
+         A deserialized Responder object
+
+      Return type:
+         (dict)
+
+   MAX_HISTORY_LEN = 100
+
+      The max number of turns in history.
+
+   ready
+
+      Whether the nlp component is ready.
+
+mindmeld.app_manager.freeze_params(params)
+
+   If params is a dictionary or Params we convert it into
+   FrozenParams. Otherwise we raise a TypeError.
+
+   Parameters:
+      **params** (*dict**, **Params*) – The input params to convert
+
+   Returns:
+      The converted params object
+
+   Return type:
+      FrozenParams

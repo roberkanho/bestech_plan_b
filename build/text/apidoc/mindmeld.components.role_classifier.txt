@@ -1,0 +1,127 @@
+mindmeld.components.role_classifier module
+******************************************
+
+This module contains the role classifier component of the MindMeld
+natural language processor.
+
+class mindmeld.components.role_classifier.RoleClassifier(resource_loader, domain, intent, entity_type)
+
+   Bases: "mindmeld.components.classifier.Classifier"
+
+   A role classifier is used to determine the target role for entities
+   in a given query. It is trained using all the labeled queries for a
+   particular intent. The labels are the role names associated with
+   each entity within each query.
+
+   domain
+
+      *str* – The domain that this role classifier belongs to
+
+   intent
+
+      *str* – The intent that this role classifier belongs to
+
+   entity_type
+
+      *str* – The entity type that this role classifier is for
+
+   roles
+
+      *set* – A set containing the roles which can be classified
+
+   dump(model_path, incremental_model_path=None)
+
+      Persists the trained role classification model to disk.
+
+      Parameters:
+         * **model_path** (*str*) – The model path.
+
+         * **incremental_model_path** (*str**, **Optional*) – The
+           timestamped folder where the cached                 models
+           are stored.
+
+   fit(queries=None, label_set=None, incremental_timestamp=None, **kwargs)
+
+      Trains a statistical model for role classification using the
+      provided training examples.
+
+      Parameters:
+         * **queries** (*list of ProcessedQuery*) – The labeled
+           queries to use as training data
+
+         * **label_set** (*list**, **optional*) – A label set to
+           load. If not specified, the default training set will be
+           loaded.
+
+         * **incremental_timestamp** (*str**, **optional*) – The
+           timestamp folder to cache models in
+
+   inspect(query, gold_label=None, dynamic_resource=None)
+
+   load(model_path)
+
+      Loads the trained role classification model from disk.
+
+      Parameters:
+         **model_path** (*str*) – The location on disk where the model
+         is stored
+
+   predict(query, entities, entity_index)
+
+      Predicts a role for the given entity using the trained role
+      classification model.
+
+      Parameters:
+         * **query** (*Query*) – The input query
+
+         * **entities** (*list*) – The entities in the query
+
+         * **entity_index** (*int*) – The index of the entity whose
+           role should be classified
+
+      Returns:
+         The predicted role for the provided entity
+
+      Return type:
+         str
+
+   predict_proba(query, entities, entity_index)
+
+      Runs prediction on a given entity and generates multiple role
+      hypotheses and associated probabilities using the trained role
+      classification model.
+
+      Parameters:
+         * **query** (*Query*) – The input query
+
+         * **entities** (*list*) – The entities in the query
+
+         * **entity_index** (*int*) – The index of the entity whose
+           role should be classified
+
+      Returns:
+         a list of tuples of the form (str, float) grouping roles and
+         their probabilities
+
+      Return type:
+         list
+
+   view_extracted_features(query, entities, entity_index)
+
+      Extracts features for a given entity for role classification.
+
+      Parameters:
+         * **query** (*Query** or **str*) – The input query
+
+         * **entities** (*list*) – The entities in the query
+
+         * **entity_index** (*int*) – The index of the entity whose
+           role should be classified
+
+      Returns:
+         The extracted features from the given input
+
+      Return type:
+         dict
+
+   CLF_TYPE = 'role'

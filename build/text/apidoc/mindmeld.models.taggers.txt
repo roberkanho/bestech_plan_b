@@ -1,0 +1,16 @@
+mindmeld.models.taggers package
+*******************************
+
+
+Submodules
+==========
+
+* mindmeld.models.taggers.crf module
+
+* mindmeld.models.taggers.embeddings module
+
+* mindmeld.models.taggers.lstm module
+
+* mindmeld.models.taggers.memm module
+
+* mindmeld.models.taggers.taggers module

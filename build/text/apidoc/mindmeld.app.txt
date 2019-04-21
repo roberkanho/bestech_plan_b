@@ -1,0 +1,91 @@
+mindmeld.app module
+*******************
+
+This module contains the app component.
+
+class mindmeld.app.Application(import_name, request_class=None, responder_class=None, preprocessor=None, async_mode=False)
+
+   Bases: "object"
+
+   The conversational application.
+
+   import_name
+
+      *str* – The name of the application package.
+
+   app_path
+
+      *str* – The application path.
+
+   app_manager
+
+      *ApplicationManager* – The application manager.
+
+   request_class
+
+      *Request* – Any class that inherits from
+      Request.
+
+   responder_class
+
+      *DialogueResponder* – Any class that                 inherits
+      from the DialogueResponder.
+
+   preprocessor
+
+      *Preprocessor* – The application preprocessor, if any.
+
+   async_mode
+
+      *bool* – "True" if the application is async, "False" otherwise.
+
+   add_dialogue_rule(name, handler, **kwargs)
+
+      Adds a dialogue rule for the dialogue manager.
+
+      Parameters:
+         * **name** (*str*) – The name of the dialogue state
+
+         * **handler** (*callable*) – The dialogue state handler
+           function
+
+         * **kwargs** (*dict*) – A list of options which specify the
+           dialogue rule
+
+   add_middleware(middleware)
+
+      Adds middleware for the dialogue manager
+
+      Parameters:
+         **middleware** (*callable*) – A dialogue manager middleware
+         function
+
+   cli()
+
+      Initialize the application’s command line interface.
+
+   dialogue_flow(**kwargs)
+
+      Creates a dialogue flow for the application
+
+   handle(**kwargs)
+
+      A decorator that is used to register dialogue state rules
+
+   lazy_init(nlp=None)
+
+      Initialize the application manager, spin up the server and
+      compile the dialogue rules.
+
+   middleware(*args)
+
+      A decorator that is used to register dialogue handler middleware
+
+   run(**kwargs)
+
+      Runs the application on a local development server.
+
+   question_answerer
+
+      The application’s Question Answerer, which is initialized as
+      part of the application             manager.

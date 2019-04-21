@@ -1,0 +1,89 @@
+mindmeld.models.taggers.embeddings module
+*****************************************
+
+class mindmeld.models.taggers.embeddings.CharacterSequenceEmbedding(sequence_padding_length, token_embedding_dimension=None, max_char_per_word=None)
+
+   Bases: "object"
+
+   CharacterSequenceEmbedding encodes a sequence of words into a
+   sequence of fixed dimension real-numbered vectors by mapping each
+   character in the words as vectors.
+
+   encode_sequence_of_tokens(token_sequence)
+
+      Encodes a sequence of tokens into real value vectors.
+
+      Parameters:
+         **token_sequence** (*list*) – A sequence of tokens.
+
+      Returns:
+         Encoded sequence of tokens.
+
+      Return type:
+         (list)
+
+   save_embeddings()
+
+      Save extracted embeddings to historic pickle file.
+
+class mindmeld.models.taggers.embeddings.GloVeEmbeddingsContainer(token_dimension=300, token_pretrained_embedding_filepath=None)
+
+   Bases: "object"
+
+   This class is responsible for the downloading, extraction and
+   storing of word embeddings based on the GloVe format.
+
+   get_pretrained_word_to_embeddings_dict()
+
+      Returns the word to embedding dict.
+
+      Returns:
+         word to embedding mapping.
+
+      Return type:
+         (dict)
+
+class mindmeld.models.taggers.embeddings.TqdmUpTo(iterable=None, desc=None, total=None, leave=True, file=None, ncols=None, mininterval=0.1, maxinterval=10.0, miniters=None, ascii=None, disable=False, unit='it', unit_scale=False, dynamic_ncols=False, smoothing=0.3, bar_format=None, initial=0, position=None, postfix=None, unit_divisor=1000, write_bytes=None, gui=False, **kwargs)
+
+   Bases: "tqdm._tqdm.tqdm"
+
+   Provides *update_to(n)* which uses *tqdm.update(delta_n)*.
+
+   update_to(b=1, bsize=1, tsize=None)
+
+      Reports update statistics on the download progress.
+
+      Parameters:
+         * **b** (*int*) – Number of blocks transferred so far
+           [default: 1].
+
+         * **bsize** (*int*) – Size of each block (in tqdm units)
+           [default: 1].
+
+         * **tsize** (*int*) – Total size (in tqdm units). If
+           [default: None] remains unchanged.
+
+class mindmeld.models.taggers.embeddings.WordSequenceEmbedding(sequence_padding_length, token_embedding_dimension=None, token_pretrained_embedding_filepath=None)
+
+   Bases: "object"
+
+   WordSequenceEmbedding encodes a sequence of words into a sequence
+   of fixed dimension real-numbered vectors by mapping each word as a
+   vector.
+
+   encode_sequence_of_tokens(token_sequence)
+
+      Encodes a sequence of tokens into real value vectors.
+
+      Parameters:
+         **token_sequence** (*list*) – A sequence of tokens.
+
+      Returns:
+         Encoded sequence of tokens.
+
+      Return type:
+         (list)
+
+   save_embeddings()
+
+      Save extracted embeddings to historic pickle file.

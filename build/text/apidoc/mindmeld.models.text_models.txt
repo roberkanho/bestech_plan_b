@@ -1,0 +1,101 @@
+mindmeld.models.text_models module
+**********************************
+
+This module contains all code required to perform multinomial
+classification of text.
+
+class mindmeld.models.text_models.TextModel(config)
+
+   Bases: "mindmeld.models.model.Model"
+
+   evaluate(examples, labels)
+
+      Evaluates a model against the given examples and labels
+
+      Parameters:
+         * **examples** – A list of examples to predict
+
+         * **labels** – A list of expected labels
+
+      Returns:
+         an object containing information about the
+         evaluation
+
+      Return type:
+         ModelEvaluation
+
+   fit(examples, labels, params=None)
+
+      Trains this model.
+
+      This method inspects instance attributes to determine the
+      classifier object and cross-validation strategy, and then fits
+      the model to the training examples passed in.
+
+      Parameters:
+         * **examples** (*list*) – A list of examples.
+
+         * **labels** (*list*) – A parallel list to examples. The
+           gold labels for each example.
+
+         * **params** (*dict**, **optional*) – Parameters to use
+           when training. Parameter selection will be bypassed if this
+           is provided
+
+      Returns:
+         Returns self to match classifier scikit-learn
+         interfaces.
+
+      Return type:
+         (TextModel)
+
+   get_feature_matrix(examples, y=None, fit=False, dynamic_resource=None)
+
+      Transforms a list of examples into a feature matrix.
+
+      Parameters:
+         **examples** (*list*) – The examples.
+
+      Returns:
+         tuple containing:
+
+            * (numpy.matrix): The feature matrix.
+
+            * (numpy.array): The group labels for examples.
+
+      Return type:
+         (tuple)
+
+   inspect(example, gold_label=None, dynamic_resource=None)
+
+      This class takes an example and returns a DataFrame for every
+      feature with feature
+         name, feature value, feature weight and their product for the
+         predicted label. If gold label is passed in, we will also
+         include the feature value and weight for the gold label and
+         returns the log probability of the difference.
+
+      Parameters:
+         * **example** (*Query*) – The query to be predicted
+
+         * **gold_label** (*str*) – The gold label for this string
+
+         * **dynamic_resource** (*dict**, **optional*) – A dynamic
+           resource to aid NLP inference
+
+      Returns:
+         The DataFrame that includes every feature, their value,
+         weight and              probability
+
+      Return type:
+         (DataFrame)
+
+   predict(examples, dynamic_resource=None)
+
+   predict_log_proba(examples, dynamic_resource=None)
+
+   predict_proba(examples, dynamic_resource=None)
+
+   select_params(examples, labels, selection_settings=None)
+
+   view_extracted_features(example, dynamic_resource=None)

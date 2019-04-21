@@ -1,0 +1,95 @@
+mindmeld.exceptions module
+**************************
+
+This module contains exceptions used by the mindmeld package.
+
+exception mindmeld.exceptions.AllowedNlpClassesKeyError(*args)
+
+   Bases: "mindmeld.exceptions.MindMeldError"
+
+exception mindmeld.exceptions.AuthNotFoundError(*args)
+
+   Bases: "mindmeld.exceptions.MindMeldError"
+
+exception mindmeld.exceptions.BadMindMeldRequestError(message, status_code=None, payload=None)
+
+   Bases: "mindmeld.exceptions.MindMeldError"
+
+   to_dict()
+
+   status_code = 400
+
+exception mindmeld.exceptions.ClassifierLoadError(*args)
+
+   Bases: "mindmeld.exceptions.MindMeldError"
+
+exception mindmeld.exceptions.EmbeddingDownloadError(*args)
+
+   Bases: "mindmeld.exceptions.MindMeldError"
+
+exception mindmeld.exceptions.EntityResolverConnectionError(es_host)
+
+   Bases: "mindmeld.exceptions.EntityResolverError"
+
+   An exception for connection error to Elasticsearch for entity
+   resolver
+
+exception mindmeld.exceptions.EntityResolverError(*args)
+
+   Bases: "mindmeld.exceptions.MindMeldError"
+
+   An exception for unexpected error from entity resolver.
+
+exception mindmeld.exceptions.KnowledgeBaseConnectionError(es_host)
+
+   Bases: "mindmeld.exceptions.KnowledgeBaseError"
+
+   An exception for problem connecting to knowledge base.
+
+exception mindmeld.exceptions.KnowledgeBaseError(*args)
+
+   Bases: "mindmeld.exceptions.MindMeldError"
+
+   An exception for unexpected error from knowledge base.
+
+exception mindmeld.exceptions.MarkupError(*args)
+
+   Bases: "mindmeld.exceptions.MindMeldError"
+
+exception mindmeld.exceptions.MindMeldError(*args)
+
+   Bases: "Exception"
+
+exception mindmeld.exceptions.MindMeldImportError(*args)
+
+   Bases: "mindmeld.exceptions.MindMeldError"
+
+exception mindmeld.exceptions.MindMeldVersionError(*args)
+
+   Bases: "mindmeld.exceptions.MindMeldError"
+
+exception mindmeld.exceptions.MindMeldVersionWarning
+
+   Bases: "UserWarning"
+
+exception mindmeld.exceptions.ParserTimeout(*args)
+
+   Bases: "mindmeld.exceptions.MindMeldError"
+
+   An exception for when parsing takes an unexpected length of time
+
+exception mindmeld.exceptions.ProcessorError(*args)
+
+   Bases: "mindmeld.exceptions.MindMeldError"
+
+   An exception which indicates an error with a processor.
+
+exception mindmeld.exceptions.SystemEntityMarkupError(*args)
+
+   Bases: "mindmeld.exceptions.MarkupError"
+
+exception mindmeld.exceptions.SystemEntityResolutionError(*args)
+
+   Bases: "mindmeld.exceptions.MindMeldError"
+
+   An exception representing an error resolving a system entity

@@ -1,0 +1,103 @@
+mindmeld.gazetteer module
+*************************
+
+class mindmeld.gazetteer.Gazetteer(name, exclude_ngrams=False)
+
+   Bases: "object"
+
+   This class holds the following  fields, which are extracted and
+   exported to file.
+
+   entity_count
+
+      *int* – Total entities in the file
+
+   pop_dict
+
+      *dict* – A dictionary containing the entity name as a key and
+      the popularity score as the value. If there are more than one
+      entity with the same name, the popularity is the maximum value
+      across all duplicate entities.
+
+   index
+
+      *dict* – A dictionary containing the inverted index, which maps
+      terms and n-grams to the set of documents which contain them
+
+   entities
+
+      *list* – A list of all entities
+
+   sys_types
+
+      *set* – The set of nested numeric types for this entity
+
+   dump(gaz_path)
+
+      Persists the gazetteer to disk.
+
+      Parameters:
+         **gaz_path** (*str*) – The location on disk where the
+         gazetteer should be stored
+
+   from_dict(serialized_gaz)
+
+      De-serializes gaz object from a dictionary using deep copy ops
+
+      Parameters:
+         **serialized_gaz** (*dict*) – The serialized gaz object
+
+   load(gaz_path)
+
+      Loads the gazetteer from disk
+
+      Parameters:
+         **gaz_path** (*str*) – The location on disk where the
+         gazetteer is stored
+
+   to_dict()
+
+      Returns: dict
+
+   update_with_entity_data_file(filename, popularity_cutoff, normalizer)
+
+      Updates this gazetteer with data from an entity data file.
+
+      Parameters:
+         * **filename** (*str*) – The filename of the entity data
+           file.
+
+         * **popularity_cutoff** (*float*) – A threshold at which
+           entities with popularity below this value are ignored.
+
+         * **normalizer** (*function*) – A function that normalizes
+           text.
+
+   update_with_entity_map(mapping, normalizer, update_if_missing_canonical=True)
+
+      Update gazetteer with a list of normalized key,value pairs from
+      the input mapping list
+
+      Parameters:
+         * **mapping** (*list*) – A list of dicts containing
+           canonnical names and whitelists of a particular entity
+
+         * **normalizer** (*func*) – A QueryFactory normalization
+           function that is used to normalize the input mapping data
+           before they are added to the gazetteer.
+
+mindmeld.gazetteer.iterate_ngrams(tokens, min_length=1, max_length=1)
+
+   Iterates over all n-grams in a list of tokens.
+
+   Parameters:
+      * **tokens** (*list of str*) – A list of word tokens.
+
+      * **min_length** (*int*) – The minimum length of n-gram to
+        yield.
+
+      * **max_length** (*int*) – The maximum length of n-gram to
+        yield.
+
+   Yields:
+      (str) An n-gram from the input tokens list.

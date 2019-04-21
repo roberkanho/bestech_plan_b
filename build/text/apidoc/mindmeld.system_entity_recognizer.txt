@@ -1,0 +1,28 @@
+mindmeld.system_entity_recognizer module
+****************************************
+
+class mindmeld.system_entity_recognizer.SystemEntityRecognizer(app_path=None)
+
+   Bases: "object"
+
+   SystemEntityRecognizer is the external parsing service used to
+   extract system entities. It is intended to be used as a singleton,
+   so it’s initialized only once during NLP object construction.
+
+   TODO: Abstract this class into an interface and implement the
+   duckling service as one such service.
+
+   static get_instance(app_path=None)
+
+      Static access method.
+
+      Parameters:
+         **app_path** (*str*) – A application path
+
+      Returns:
+         A SystemEntityRecognizer instance
+
+      Return type:
+         (SystemEntityRecognizer)
+
+   get_response(data)

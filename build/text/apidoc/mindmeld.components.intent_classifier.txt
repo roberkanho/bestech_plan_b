@@ -1,0 +1,83 @@
+mindmeld.components.intent_classifier module
+********************************************
+
+This module contains the intent classifier component of the MindMeld
+natural language processor.
+
+class mindmeld.components.intent_classifier.IntentClassifier(resource_loader, domain)
+
+   Bases: "mindmeld.components.classifier.Classifier"
+
+   An intent classifier is used to determine the target intent for a
+   given query. It is trained using all of the labeled queries across
+   all intents for a domain in an application. The labels for the
+   training data are the intent names associated with each query.
+
+   domain
+
+      *str* – The domain that this intent classifier belongs to.
+
+   dump(*args, **kwargs)
+
+      Persists the trained intent classification model to disk.
+
+      Parameters:
+         **model_path** (*str*) – The location on disk where the model
+         should be stored.
+
+   fit(*args, **kwargs)
+
+      Trains the intent classification model using the provided
+      training queries.
+
+      Parameters:
+         * **model_type** (*str*) – The type of machine learning
+           model to use. If omitted, the default model type will be
+           used.
+
+         * **features** (*dict*) – Features to extract from each
+           example instance to form the feature vector used for model
+           training. If omitted, the default feature set for the model
+           type will be used.
+
+         * **params_grid** (*dict*) – The grid of hyper-parameters
+           to search, for finding the optimal hyper-parameter settings
+           for the model. If omitted, the default hyper-parameter
+           search grid will be used.
+
+         * **queries** (*list**[**ProcessedQuery**]*) – The labeled
+           queries to use as training data.
+
+         * **cv** (*optional*) – Cross-validation settings.
+
+   inspect(query, intent=None, dynamic_resource=None)
+
+      Inspects the query.
+
+      Parameters:
+         * **query** (*Query*) – The query to be predicted.
+
+         * **intent** (*str*) – The expected intent label for this
+           query.
+
+         * **dynamic_resource** (*dict**, **optional*) – A dynamic
+           resource to aid NLP inference.
+
+      Returns:
+         The DataFrame that includes every feature, their value,
+         weight and                 probability.
+
+      Return type:
+         (DataFrame)
+
+   load(*args, **kwargs)
+
+      Loads the trained intent classification model from disk.
+
+      Parameters:
+         **model_path** (*str*) – The location on disk where the model
+         is stored.
+
+   CLF_TYPE = 'intent'
+
+      The classifier type.

@@ -1,0 +1,145 @@
+mindmeld.ser module
+*******************
+
+This module contains the system entity recognizer.
+
+class mindmeld.ser.DucklingDimension
+
+   Bases: "enum.Enum"
+
+   An enumeration.
+
+   AMOUNT_OF_MONEY = 'amount-of-money'
+
+   DISTANCE = 'distance'
+
+   DURATION = 'duration'
+
+   EMAIL = 'email'
+
+   NUMERAL = 'numeral'
+
+   ORDINAL = 'ordinal'
+
+   PHONE_NUMBER = 'phone-number'
+
+   QUANTITY = 'quantity'
+
+   TEMPERATURE = 'temperature'
+
+   TIME = 'time'
+
+   URL = 'url'
+
+   VOLUME = 'volume'
+
+mindmeld.ser.get_candidates(query, entity_types=None, language=None, time_zone=None, timestamp=None)
+
+   Identifies candidate system entities in the given query.
+
+   Parameters:
+      * **query** (*Query*) – The query to examine
+
+      * **entity_types** (*list of str*) – The entity types to
+        consider
+
+      * **language** (*str**, **optional*) – Language as specified
+        using a 639-2 code. If omitted, English is assumed.
+
+      * **time_zone** (*str**, **optional*) – An IANA time zone id
+        such as ‘America/Los_Angeles’. If not specified, the system
+        time zone is used.
+
+      * **timestamp** (*long**, **optional*) – A unix timestamp used
+        as the reference time. If not specified, the current system
+        time is used. If *time_zone* is not also specified, this
+        parameter is ignored.
+
+   Returns:
+      The system entities found in the query
+
+   Return type:
+      list of QueryEntity
+
+mindmeld.ser.get_candidates_for_text(text, entity_types=None)
+
+   Identifies candidate system entities in the given text.
+
+   Parameters:
+      * **text** (*str*) – The text to examine
+
+      * **entity_types** (*list of str*) – The entity types to
+        consider
+
+   Returns:
+      The system entities found in the text
+
+   Return type:
+      list of dict
+
+mindmeld.ser.parse_numerics(sentence, dimensions=None, language='EN', locale='en_US', time_zone=None, timestamp=None)
+
+   Calls System Entity Recognizer service API to extract numerical
+   entities from a sentence.
+
+   Parameters:
+      * **sentence** (*str*) – A raw sentence.
+
+      * **dimensions** (*None** or **list of str*) – The list of
+        types (e.g. volume,             temperature) to restrict the
+        output to. If None, include all types
+
+      * **language** (*str**, **optional*) – Language of the
+        sentence specified using a 639-1 code.             If omitted,
+        English is assumed.
+
+      * **locale** (*str**, **optional*) – The english locale being
+        used, could be en_AU, en_BE, en_BZ,             en_CA, en_CN,
+        en_GB, en_HK, en_IE, en_IN, en_JM, en_MO, en_NZ, en_PH, en_TT,
+        en_TW,             en_US, en_ZA.
+
+      * **time_zone** (*str**, **optional*) – An IANA time zone id
+        such as ‘America/Los_Angeles’.             If not specified,
+        the system time zone is used.
+
+      * **timestamp** (*long**, **optional*) – A unix millisecond
+        timestamp used as the reference time.             If not
+        specified, the current system time is used. If *time_zone* is
+        not also specified, this parameter is ignored.
+
+   Returns:
+      A tuple containing:
+
+         * response (list, dict): Response from the System Entity
+           Recognizer service that
+
+         consists of a list of dicts, each corresponding to a single
+         prediction or just a dict, corresponding to a single
+         prediction.
+
+         * response_code (int): http status code.
+
+   Return type:
+      (tuple)
+
+mindmeld.ser.resolve_system_entity(query, entity_type, span)
+
+   Resolves a system entity in the provided query at the specified
+   span.
+
+   Parameters:
+      * **query** (*Query*) – The query containing the entity
+
+      * **entity_type** (*str*) – The type of the entity
+
+      * **span** (*Span*) – The character span of the entity in the
+        query
+
+   Returns:
+      The resolved entity
+
+   Return type:
+      Entity
+
+   Raises:
+      "SystemEntityResolutionError"

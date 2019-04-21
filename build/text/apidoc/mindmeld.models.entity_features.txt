@@ -1,0 +1,44 @@
+mindmeld.models.entity_features module
+**************************************
+
+This module contains feature extractors for entities
+
+mindmeld.models.entity_features.extract_bag_of_words_after_features(ngram_lengths_to_start_positions, **args)
+
+   Returns a bag-of-words feature extractor.
+
+   Parameters:
+      **ngram_lengths_to_start_positions** (*dict*) –
+
+   Returns:
+      (function) The feature extractor.
+
+mindmeld.models.entity_features.extract_bag_of_words_before_features(ngram_lengths_to_start_positions, **args)
+
+   Returns a bag-of-words feature extractor.
+
+   Parameters:
+      **ngram_lengths_to_start_positions** (*dict*) –
+
+   Returns:
+      (function) The feature extractor.
+
+mindmeld.models.entity_features.extract_in_gaz_features(**args)
+
+   Returns a feature extractor that finds any gazetteer matches
+   against the input query
+
+mindmeld.models.entity_features.extract_numeric_candidate_features(**args)
+
+   Returns a feature extractor that generates features indicating the
+   presence of the "sys_time" and "sys_interval" numeric entities.
+   These numeric entities are identified by duckling, the numerical
+   entity recognition service and boosted by training data containing
+   the entity labels. Used by the role classifier when the "'numeric'"
+   feature is specified in the config.
+
+mindmeld.models.entity_features.extract_other_entities_features(**args)
+
+   Returns a feature extractor for all other entities apart from the
+   current entity.    Used by the role classifier when the "'other-
+   entities'" feature is specified in     the config.

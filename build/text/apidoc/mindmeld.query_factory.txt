@@ -1,0 +1,91 @@
+mindmeld.query_factory module
+*****************************
+
+This module contains the query factory class.
+
+class mindmeld.query_factory.QueryFactory(tokenizer, preprocessor=None)
+
+   Bases: "object"
+
+   An object which encapsulates the components required to create a
+   Query object.
+
+   preprocessor
+
+      *Preprocessor* – the object responsible for processing raw text
+
+   tokenizer
+
+      *Tokenizer* – the object responsible for normalizing and
+      tokenizing processed text
+
+   create_query(text, language=None, time_zone=None, timestamp=None)
+
+      Creates a query with the given text.
+
+      Parameters:
+         * **text** (*str*) – Text to create a query object for
+
+         * **language** (*str**, **optional*) – Language as
+           specified using a 639-2 code; if omitted, English is
+           assumed.
+
+         * **time_zone** (*str**, **optional*) – An IANA time zone
+           id to create the query relative to.
+
+         * **timestamp** (*int**, **optional*) – A reference unix
+           timestamp to create the query relative to, in seconds.
+
+      Returns:
+         A newly constructed query
+
+      Return type:
+         Query
+
+   static create_query_factory(app_path=None, tokenizer=None, preprocessor=None)
+
+      Creates a query factory for the application.
+
+      Parameters:
+         * **app_path** (*str**, **optional*) – The path to the
+           directory containing the app’s data. If None is passed, a
+           default query factory will be returned.
+
+         * **tokenizer** (*Tokenizer**, **optional*) – The app’s
+           tokenizer. One will be created if none is provided
+
+         * **preprocessor** (*Processor**, **optional*) – The app’s
+           preprocessor.
+
+      Returns:
+         A QueryFactory object that is used to create Query objects.
+
+      Return type:
+         QueryFactory
+
+   normalize(text)
+
+      Normalizes the given text.
+
+      Parameters:
+         **text** (*str*) – Text to process
+
+      Returns:
+         Normalized text
+
+      Return type:
+         str
+
+   stem_word(word)
+
+      Gets the stem of a word. For example, the stem of the word
+      ‘fishing’ is ‘fish’.
+
+      Parameters:
+         **word** (*str*) – The word to stem
+
+      Returns:
+         Stemmed version of a word.
+
+      Return type:
+         str

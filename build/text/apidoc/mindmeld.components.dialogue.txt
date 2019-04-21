@@ -1,0 +1,482 @@
+mindmeld.components.dialogue module
+***********************************
+
+This module contains the dialogue manager component of MindMeld
+
+class mindmeld.components.dialogue.Conversation(app=None, app_path=None, nlp=None, context=None, default_params=None, force_sync=False)
+
+   Bases: "object"
+
+   The conversation object is a very basic MindMeld client.
+
+   It can be useful for testing out dialogue flows in python.
+
+   -[ Example ]-
+
+   >>> convo = Conversation(app_path='path/to/my/app')
+   >>> convo.say('Hello')
+   ['Hello. I can help you find store hours. How can I help?']
+   >>> convo.say('Is the store on elm open?')
+   ['The 23 Elm Street Kwik-E-Mart is open from 7:00 to 19:00.']
+
+   history
+
+      *list* – The history of the conversation. Starts with the most
+      recent message.
+
+   context
+
+      *dict* – The context of the conversation, containing user
+      context.
+
+   default_params
+
+      *Params* – The default params to use with each turn. These
+      defaults will be overridden by params passed for each turn.
+
+   params
+
+      *FrozenParams* – The params returned by the most recent turn.
+
+   force_sync
+
+      *bool* – Force synchronous return for *say()* and *process()*
+      even when app is in async mode.
+
+   process(text, params=None, force_sync=False)
+
+      Send a message in the conversation. The message will be
+      processed by the app based on the current state of the
+      conversation and returns the response.
+
+      Parameters:
+         * **text** (*str*) – The text of a message.
+
+         * **params** (*dict*) – The params to use with this
+           message, overriding any defaults which may have been set.
+
+         * **force_sync** (*bool**, **optional*) – Force synchronous
+           response even when app is in async mode.
+
+      Returns:
+         The dictionary response.
+
+      Return type:
+         (dict)
+
+   reset()
+
+      Reset the history, frame and params of the Conversation object.
+
+   say(text, params=None, force_sync=False)
+
+      Send a message in the conversation. The message will be
+      processed by the app based on the current state of the
+      conversation and returns the extracted messages from the
+      directives.
+
+      Parameters:
+         * **text** (*str*) – The text of a message.
+
+         * **params** (*dict*) – The params to use with this
+           message, overriding any defaults which may have been set.
+
+         * **force_sync** (*bool**, **optional*) – Force synchronous
+           response even when app is in async mode.
+
+      Returns:
+         A text representation of the dialogue responses.
+
+      Return type:
+         (list)
+
+class mindmeld.components.dialogue.DialogueFlow(name, entrance_handler, app, **kwargs)
+
+   Bases: "mindmeld.components.dialogue.DialogueManager"
+
+   A special dialogue manager subclass used to implement dialogue
+   flows. Dialogue flows allow developers to implement multiple turn
+   interactions where only a subset of dialogue states should be
+   accessible or where different dialogue rules should apply.
+
+   app
+
+      *Application* – The application that initializes this flow.
+
+   exit_flow_states
+
+      *list* – The list of exit states.
+
+   apply_handler(request, responder=None)
+
+      Applies the dialogue state handler for the dialogue flow and set
+      the target dialogue state to the flow state.
+
+      Parameters:
+         * **request** (*Request*) – The request object.
+
+         * **responder** (*DialogueResponder*) – The responder
+           object.
+
+      Returns:
+         A dict containing the dialogue state and directives.
+
+      Return type:
+         (dict)
+
+   apply_handler_async(request, responder)
+
+      Applies the dialogue state handler for the dialogue flow and
+      sets the target dialogue state to the flow state asynchronously.
+
+      Parameters:
+         * **request** (*Request*) – The request object.
+
+         * **responder** (*DialogueResponder*) – The responder
+           object.
+
+      Returns:
+         A dict containing the dialogue state and directives.
+
+      Return type:
+         (dict)
+
+   handle(**kwargs)
+
+      The dialogue flow handler.
+
+   use_middleware(*args)
+
+      Allows a middleware to be added to this flow.
+
+   all_flows = {}
+
+      The dictionary that references all dialogue flows.
+
+   dialogue_manager
+
+      The dialogue manager which contains this flow.
+
+   flow_state
+
+      The state of the flow (<name>_flow).
+
+   logger = <Logger mindmeld.components.dialogue.DialogueFlow (NOTSET)>
+
+      Class logger.
+
+   name
+
+      The name of this flow.
+
+class mindmeld.components.dialogue.DialogueManager(responder_class=None, async_mode=False)
+
+   Bases: "object"
+
+   add_dialogue_rule(name, handler, **kwargs)
+
+      Adds a dialogue state rule for the dialogue manager.
+
+      Parameters:
+         * **name** (*str*) – The name of the dialogue state.
+
+         * **handler** (*function*) – The dialogue state handler
+           function.
+
+         * **kwargs** (*dict*) – A list of options to be passed to
+           the DialogueStateRule initializer.
+
+   add_middleware(middleware)
+
+      Adds middleware for the dialogue manager. Middleware will be
+      called for each message before the dialogue state handler.
+      Middleware registered first will be called first.
+
+      Parameters:
+         **middleware** (*callable*) – A dialogue manager middleware
+         function.
+
+   apply_handler(request, responder, target_dialogue_state=None)
+
+      Applies the dialogue state handler for the most complex matching
+      rule.
+
+      Parameters:
+         * **request** (*Request*) – The request object.
+
+         * **responder** (*DialogueResponder*) – The responder
+           object.
+
+         * **target_dialogue_state** (*str**, **optional*) – The
+           target dialogue state.
+
+      Returns:
+         A dict containing the dialogue state and directives.
+
+      Return type:
+         (dict)
+
+   handle(**kwargs)
+
+      A decorator that is used to register dialogue state rules.
+
+   middleware(*args)
+
+      A decorator that is used to register dialogue handler
+      middleware.
+
+   logger = <Logger mindmeld.components.dialogue.DialogueManager (NOTSET)>
+
+class mindmeld.components.dialogue.DialogueResponder(frame=None, params=None, history=None, slots=None, request=None, dialogue_state=None, directives=None)
+
+   Bases: "object"
+
+   The dialogue responder helps generate directives and fill slots in
+   the system-generated natural language responses.
+
+   class DirectiveNames
+
+      Bases: "object"
+
+      The list of directive names.
+
+      LIST = 'list'
+
+      LISTEN = 'listen'
+
+      REPLY = 'reply'
+
+      RESET = 'reset'
+
+      SPEAK = 'speak'
+
+      SUGGESTIONS = 'suggestions'
+
+   class DirectiveTypes
+
+      Bases: "object"
+
+      The list of directive types.
+
+      ACTION = 'action'
+
+      VIEW = 'view'
+
+   act(name, payload=None)
+
+      Adds an arbitrary directive of type ‘action’.
+
+      Parameters:
+         * **name** (*str*) – The name of the directive.
+
+         * **payload** (*dict**, **optional*) – The payload for the
+           action.
+
+   direct(name, dtype, payload=None)
+
+      Adds an arbitrary directive.
+
+      Parameters:
+         * **name** (*str*) – The name of the directive.
+
+         * **dtype** (*str*) – The type of the directive.
+
+         * **payload** (*dict**, **optional*) – The payload for the
+           view.
+
+   display(name, payload=None)
+
+      Adds an arbitrary directive of type ‘view’.
+
+      Parameters:
+         * **name** (*str*) – The name of the directive.
+
+         * **payload** (*dict**, **optional*) – The payload for the
+           view.
+
+   exit_flow()
+
+      Exit the current flow by clearing the target dialogue state.
+
+   list(items)
+
+      Adds a ‘list’ view directive.
+
+      Parameters:
+         **items** (*list*) – The list of dictionary objects.
+
+   listen()
+
+      Adds a ‘listen’ directive.
+
+   prompt(text)
+
+      Alias for *reply()*. Deprecated.
+
+      Parameters:
+         **text** (*str*) – The text of the reply.
+
+   reply(text)
+
+      Adds a ‘reply’ directive.
+
+      Parameters:
+         **text** (*str*) – The text of the reply.
+
+   reset()
+
+      Adds a ‘reset’ directive.
+
+   respond(directive)
+
+      Adds an arbitrary directive.
+
+      Parameters:
+         **directive** (*dict*) – A directive.
+
+   speak(text)
+
+      Adds a ‘speak’ directive.
+
+      Parameters:
+         **text** (*str*) – The text to speak aloud.
+
+   suggest(suggestions)
+
+      Adds a ‘suggestions’ directive.
+
+      Parameters:
+         **suggestions** (*list*) – A list of suggestions.
+
+   static to_json(instance)
+
+      Convert the responder into a JSON representation. :param
+      instance: The responder object. :type instance:
+      DialogueResponder
+
+      Returns:
+         The JSON representation.
+
+      Return type:
+         (dict)
+
+class mindmeld.components.dialogue.DialogueStateRule(dialogue_state, **kwargs)
+
+   Bases: "object"
+
+   A rule that determines a dialogue state. Each rule represents a
+   pattern that must match in order to invoke a particular dialogue
+   state.
+
+   dialogue_state
+
+      *str* – The name of the dialogue state.
+
+   domain
+
+      *str* – The name of the domain to match against.
+
+   entity_types
+
+      *set* – The set of entity types to match against.
+
+   intent
+
+      *str* – The name of the intent to match against.
+
+   targeted_only
+
+      *bool* – Whether the state is targeted only.
+
+   default
+
+      *bool* – Whether this is the default state.
+
+   apply(request)
+
+      Applies the dialogue state rule to the given context.
+
+      Parameters:
+         **request** (*Request*) – A request object.
+
+      Returns:
+         Whether or not the context matches.
+
+      Return type:
+         (bool)
+
+   static compare(this, that)
+
+      Compares the complexity of two dialogue state rules. :param
+      this: A dialogue state rule. :type this: DialogueStateRule
+      :param that: A dialogue state rule. :type that:
+      DialogueStateRule
+
+      Returns:
+         The comparison result
+            -1: that is more complex than this 0: this and that are
+            equally complex 1: this is more complex than that
+
+      Return type:
+         (int)
+
+   complexity
+
+      Returns an integer representing the complexity of this dialogue
+      state rule. Components of a rule in order of increasing
+      complexity are as follows: default rule, domains, intents,
+      entity types, entity mappings.
+
+      Returns:
+         A number representing the rule complexity.
+
+      Return type:
+         (int)
+
+   logger = <Logger mindmeld.components.dialogue.DialogueStateRule (NOTSET)>
+
+      Class logger.
+
+class mindmeld.components.dialogue.DirectiveNames
+
+   Bases: "object"
+
+   A constants object for directive names.
+
+   LIST = 'list'
+
+      A directive to display a list.
+
+   LISTEN = 'listen'
+
+      A directive to listen (start speech recognition).
+
+   REPLY = 'reply'
+
+      A directive to display a text view.
+
+   RESET = 'reset'
+
+      A directive to reset.
+
+   SPEAK = 'speak'
+
+      A directive to speak text out loud.
+
+   SUGGESTIONS = 'suggestions'
+
+      A view for a list of suggestions.
+
+class mindmeld.components.dialogue.DirectiveTypes
+
+   Bases: "object"
+
+   A constants object for directive types.
+
+   ACTION = 'action'
+
+      A view directive.
+
+   VIEW = 'view'
+
+      An action directive.

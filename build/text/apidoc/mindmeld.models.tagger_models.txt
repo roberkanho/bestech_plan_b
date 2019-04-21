@@ -1,0 +1,153 @@
+mindmeld.models.tagger_models module
+************************************
+
+This module contains the Memm entity recognizer.
+
+class mindmeld.models.tagger_models.TaggerModel(config)
+
+   Bases: "mindmeld.models.model.Model"
+
+   A machine learning classifier for tags.
+
+   This class manages feature extraction, training, cross-validation,
+   and prediction. The design goal is that after providing initial
+   settings like hyperparameters, grid-searchable hyperparameters,
+   feature extractors, and cross-validation settings, TaggerModel
+   manages all of the details involved in training and prediction such
+   that the input to training or prediction is Query objects, and the
+   output is class names, and no data manipulation is needed from the
+   client.
+
+   classifier_type
+
+      *str* – The name of the classifier type. Currently recognized
+      values are “memm”,”crf”, and “lstm”
+
+   hyperparams
+
+      *dict* – A kwargs dict of parameters that will be used to
+      initialize the classifier object.
+
+   grid_search_hyperparams
+
+      *dict* – Like ‘hyperparams’, but the values are lists of
+      parameters. The training process will grid search over the
+      Cartesian product of these parameter lists and select the best
+      via cross-validation.
+
+   feat_specs
+
+      *dict* – A mapping from feature extractor names, as given in
+      FEATURE_NAME_MAP, to a kwargs dict, which will be passed into
+      the associated feature extractor function.
+
+   cross_validation_settings
+
+      *dict* – A dict that contains “type”, which specifies the name
+      of the cross-validation strategy, such as “k-folds” or
+      “shuffle”. The remaining keys are parameters specific to the
+      cross-validation type, such as “k” when the type is “k-folds”.
+
+   dump(path, config)
+
+      Dumps the model using joblib for the config and call’s the
+      underlying model to dump its state.
+
+      Parameters:
+         * **path** (*str*) – The path to dump the model to
+
+         * **config** (*dict*) – The config containing the model
+           configuration
+
+   evaluate(examples, labels)
+
+      Evaluates a model against the given examples and labels
+
+      Parameters:
+         * **examples** – A list of examples to predict
+
+         * **labels** – A list of expected labels
+
+      Returns:
+         an object containing information about the
+         evaluation
+
+      Return type:
+         ModelEvaluation
+
+   fit(examples, labels, params=None)
+
+      Trains the model.
+
+      Parameters:
+         * **examples** (*list of mindmeld.core.Query*) – A list of
+           queries to train on.
+
+         * **labels** (*list of tuples of
+           mindmeld.core.QueryEntity*) – A list of expected labels.
+
+         * **params** (*dict*) – Parameters of the classifier.
+
+   get_feature_matrix(examples, y=None, fit=False)
+
+   load(path, config)
+
+      Load the model state to memory. This method is strictly for non-
+      serializable models like tensorflow models
+
+      Parameters:
+         * **path** (*str*) – The path to dump the model to
+
+         * **config** (*dict*) – The config containing the model
+           configuration
+
+   predict(examples, dynamic_resource=None)
+
+      Parameters:
+         * **examples** (*list of mindmeld.core.Query*) – a list of
+           queries to train on
+
+         * **dynamic_resource** (*dict**, **optional*) – A dynamic
+           resource to aid NLP inference
+
+      Returns:
+         a list of predicted labels
+
+      Return type:
+         (list of tuples of mindmeld.core.QueryEntity)
+
+   predict_proba(examples, dynamic_resource=None)
+
+      Parameters:
+         * **examples** (*list of mindmeld.core.Query*) – a list of
+           queries to train on
+
+         * **dynamic_resource** (*dict**, **optional*) – A dynamic
+           resource to aid NLP inference
+
+      Returns:
+         a list of predicted labels             with confidence scores
+
+      Return type:
+         list of tuples of (mindmeld.core.QueryEntity)
+
+   select_params(examples, labels, selection_settings=None)
+
+   view_extracted_features(query, dynamic_resource=None)
+
+      Returns a dictionary of extracted features and their weights for
+      a given query
+
+      Parameters:
+         * **query** (*mindmeld.core.Query*) – The query to extract
+           features from
+
+         * **dynamic_resource** (*dict*) – The dynamic resource used
+           along with the query
+
+      Returns:
+         A list of dictionaries of extracted features and their
+         weights
+
+      Return type:
+         list

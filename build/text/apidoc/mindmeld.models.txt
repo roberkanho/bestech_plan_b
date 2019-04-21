@@ -1,0 +1,182 @@
+mindmeld.models package
+***********************
+
+class mindmeld.models.ModelConfig(model_type=None, example_type=None, label_type=None, features=None, model_settings=None, params=None, param_selection=None, train_label_set=None, test_label_set=None)
+
+   Bases: "object"
+
+   A value object representing a model configuration.
+
+   model_type
+
+      *str* – The name of the model type. Will be used to find the
+      model class to instantiate
+
+   example_type
+
+      *str* – The type of the examples which will be passed into
+      *fit()* and *predict()*. Used to select feature extractors
+
+   label_type
+
+      *str* – The type of the labels which will be passed into *fit()*
+      and returned by *predict()*. Used to select the label encoder
+
+   model_settings
+
+      *dict* – Settings specific to the model type specified
+
+   params
+
+      *dict* – Params to pass to the underlying classifier
+
+   param_selection
+
+      *dict* – Configuration for param selection (using cross
+      validation) {‘type’: ‘shuffle’, ‘n’: 3, ‘k’: 10, ‘n_jobs’: 2,
+      ‘scoring’: ‘’, ‘grid’: {} }
+
+   features
+
+      *dict* – The keys are the names of feature extractors and the
+      values are either a kwargs dict which will be passed into the
+      feature extractor function, or a callable which will be used as
+      to extract features
+
+   train_label_set
+
+      *regex pattern* – The regex pattern for finding training file
+      names.
+
+   test_label_set
+
+      *regex pattern* – The regex pattern for finding testing file
+      names.
+
+   get_ngram_lengths_and_thresholds(rname)
+
+      Returns the n-gram lengths and thresholds to extract to optimize
+      resource collection
+
+      Parameters:
+         **rname** (*string*) – Name of the resource
+
+      Returns:
+         tuple containing:
+
+            * lengths (list of int): list of n-gram lengths to be
+              extracted
+
+            * thresholds (list of int): thresholds to be applied to
+              corresponding n-gram lengths
+
+      Return type:
+         (tuple)
+
+   required_resources()
+
+      Returns the resources this model requires
+
+      Returns:
+         set of required resources for this model
+
+      Return type:
+         set
+
+   resolve_config(new_config)
+
+      This method resolves any config incompatibility issues by
+      loading the latest settings from the app config to the current
+      config
+
+      Parameters:
+         **new_config** (*ModelConfig*) – The ModelConfig representing
+         the app’s latest config
+
+   to_dict()
+
+      Converts the model config object into a dict
+
+      Returns:
+         A dict version of the config
+
+      Return type:
+         dict
+
+   to_json()
+
+      Converts the model config object to JSON
+
+      Returns:
+         JSON representation of the classifier
+
+      Return type:
+         str
+
+   example_type
+
+   features
+
+   label_type
+
+   model_settings
+
+   model_type
+
+   param_selection
+
+   params
+
+   test_label_set
+
+   train_label_set
+
+mindmeld.models.create_model(config)
+
+   Creates a model instance using the provided configuration
+
+   Parameters:
+      **config** (*ModelConfig*) – A model configuration
+
+   Returns:
+      a configured model
+
+   Return type:
+      Model
+
+   Raises:
+      "ValueError" – When model configuration is invalid
+
+
+Subpackages
+===========
+
+* mindmeld.models.taggers package
+
+  * Submodules
+
+    * mindmeld.models.taggers.crf module
+
+    * mindmeld.models.taggers.embeddings module
+
+    * mindmeld.models.taggers.lstm module
+
+    * mindmeld.models.taggers.memm module
+
+    * mindmeld.models.taggers.taggers module
+
+
+Submodules
+==========
+
+* mindmeld.models.entity_features module
+
+* mindmeld.models.helpers module
+
+* mindmeld.models.model module
+
+* mindmeld.models.query_features module
+
+* mindmeld.models.tagger_models module
+
+* mindmeld.models.text_models module

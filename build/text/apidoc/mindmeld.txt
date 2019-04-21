@@ -1,0 +1,646 @@
+mindmeld package
+****************
+
+class mindmeld.Application(import_name, request_class=None, responder_class=None, preprocessor=None, async_mode=False)
+
+   Bases: "object"
+
+   The conversational application.
+
+   import_name
+
+      *str* – The name of the application package.
+
+   app_path
+
+      *str* – The application path.
+
+   app_manager
+
+      *ApplicationManager* – The application manager.
+
+   request_class
+
+      *Request* – Any class that inherits from
+      Request.
+
+   responder_class
+
+      *DialogueResponder* – Any class that                 inherits
+      from the DialogueResponder.
+
+   preprocessor
+
+      *Preprocessor* – The application preprocessor, if any.
+
+   async_mode
+
+      *bool* – "True" if the application is async, "False" otherwise.
+
+   add_dialogue_rule(name, handler, **kwargs)
+
+      Adds a dialogue rule for the dialogue manager.
+
+      Parameters:
+         * **name** (*str*) – The name of the dialogue state
+
+         * **handler** (*callable*) – The dialogue state handler
+           function
+
+         * **kwargs** (*dict*) – A list of options which specify the
+           dialogue rule
+
+   add_middleware(middleware)
+
+      Adds middleware for the dialogue manager
+
+      Parameters:
+         **middleware** (*callable*) – A dialogue manager middleware
+         function
+
+   cli()
+
+      Initialize the application’s command line interface.
+
+   dialogue_flow(**kwargs)
+
+      Creates a dialogue flow for the application
+
+   handle(**kwargs)
+
+      A decorator that is used to register dialogue state rules
+
+   lazy_init(nlp=None)
+
+      Initialize the application manager, spin up the server and
+      compile the dialogue rules.
+
+   middleware(*args)
+
+      A decorator that is used to register dialogue handler middleware
+
+   run(**kwargs)
+
+      Runs the application on a local development server.
+
+   question_answerer
+
+      The application’s Question Answerer, which is initialized as
+      part of the application             manager.
+
+class mindmeld.Conversation(app=None, app_path=None, nlp=None, context=None, default_params=None, force_sync=False)
+
+   Bases: "object"
+
+   The conversation object is a very basic MindMeld client.
+
+   It can be useful for testing out dialogue flows in python.
+
+   -[ Example ]-
+
+   >>> convo = Conversation(app_path='path/to/my/app')
+   >>> convo.say('Hello')
+   ['Hello. I can help you find store hours. How can I help?']
+   >>> convo.say('Is the store on elm open?')
+   ['The 23 Elm Street Kwik-E-Mart is open from 7:00 to 19:00.']
+
+   history
+
+      *list* – The history of the conversation. Starts with the most
+      recent message.
+
+   context
+
+      *dict* – The context of the conversation, containing user
+      context.
+
+   default_params
+
+      *Params* – The default params to use with each turn. These
+      defaults will be overridden by params passed for each turn.
+
+   params
+
+      *FrozenParams* – The params returned by the most recent turn.
+
+   force_sync
+
+      *bool* – Force synchronous return for *say()* and *process()*
+      even when app is in async mode.
+
+   process(text, params=None, force_sync=False)
+
+      Send a message in the conversation. The message will be
+      processed by the app based on the current state of the
+      conversation and returns the response.
+
+      Parameters:
+         * **text** (*str*) – The text of a message.
+
+         * **params** (*dict*) – The params to use with this
+           message, overriding any defaults which may have been set.
+
+         * **force_sync** (*bool**, **optional*) – Force synchronous
+           response even when app is in async mode.
+
+      Returns:
+         The dictionary response.
+
+      Return type:
+         (dict)
+
+   reset()
+
+      Reset the history, frame and params of the Conversation object.
+
+   say(text, params=None, force_sync=False)
+
+      Send a message in the conversation. The message will be
+      processed by the app based on the current state of the
+      conversation and returns the extracted messages from the
+      directives.
+
+      Parameters:
+         * **text** (*str*) – The text of a message.
+
+         * **params** (*dict*) – The params to use with this
+           message, overriding any defaults which may have been set.
+
+         * **force_sync** (*bool**, **optional*) – Force synchronous
+           response even when app is in async mode.
+
+      Returns:
+         A text representation of the dialogue responses.
+
+      Return type:
+         (list)
+
+class mindmeld.DialogueResponder(frame=None, params=None, history=None, slots=None, request=None, dialogue_state=None, directives=None)
+
+   Bases: "object"
+
+   The dialogue responder helps generate directives and fill slots in
+   the system-generated natural language responses.
+
+   class DirectiveNames
+
+      Bases: "object"
+
+      A constants object for directive names.
+
+      LIST = 'list'
+
+      LISTEN = 'listen'
+
+      REPLY = 'reply'
+
+      RESET = 'reset'
+
+      SPEAK = 'speak'
+
+      SUGGESTIONS = 'suggestions'
+
+   class DirectiveTypes
+
+      Bases: "object"
+
+      A constants object for directive types.
+
+      ACTION = 'action'
+
+      VIEW = 'view'
+
+   act(name, payload=None)
+
+      Adds an arbitrary directive of type ‘action’.
+
+      Parameters:
+         * **name** (*str*) – The name of the directive.
+
+         * **payload** (*dict**, **optional*) – The payload for the
+           action.
+
+   direct(name, dtype, payload=None)
+
+      Adds an arbitrary directive.
+
+      Parameters:
+         * **name** (*str*) – The name of the directive.
+
+         * **dtype** (*str*) – The type of the directive.
+
+         * **payload** (*dict**, **optional*) – The payload for the
+           view.
+
+   display(name, payload=None)
+
+      Adds an arbitrary directive of type ‘view’.
+
+      Parameters:
+         * **name** (*str*) – The name of the directive.
+
+         * **payload** (*dict**, **optional*) – The payload for the
+           view.
+
+   exit_flow()
+
+      Exit the current flow by clearing the target dialogue state.
+
+   list(items)
+
+      Adds a ‘list’ view directive.
+
+      Parameters:
+         **items** (*list*) – The list of dictionary objects.
+
+   listen()
+
+      Adds a ‘listen’ directive.
+
+   prompt(text)
+
+      Alias for *reply()*. Deprecated.
+
+      Parameters:
+         **text** (*str*) – The text of the reply.
+
+   reply(text)
+
+      Adds a ‘reply’ directive.
+
+      Parameters:
+         **text** (*str*) – The text of the reply.
+
+   reset()
+
+      Adds a ‘reset’ directive.
+
+   respond(directive)
+
+      Adds an arbitrary directive.
+
+      Parameters:
+         **directive** (*dict*) – A directive.
+
+   speak(text)
+
+      Adds a ‘speak’ directive.
+
+      Parameters:
+         **text** (*str*) – The text to speak aloud.
+
+   suggest(suggestions)
+
+      Adds a ‘suggestions’ directive.
+
+      Parameters:
+         **suggestions** (*list*) – A list of suggestions.
+
+   static to_json(instance)
+
+      Convert the responder into a JSON representation. :param
+      instance: The responder object. :type instance:
+      DialogueResponder
+
+      Returns:
+         The JSON representation.
+
+      Return type:
+         (dict)
+
+class mindmeld.NaturalLanguageProcessor(app_path, resource_loader=None, config=None)
+
+   Bases: "mindmeld.components.nlp.Processor"
+
+   The natural language processor is the MindMeld component
+   responsible for understanding the user input using a hierarchy of
+   natural language processing models.
+
+   domain_classifier
+
+      *DomainClassifier* – The domain classifier for this application.
+
+   extract_allowed_intents(allowed_intents)
+
+      This function validates a user inputted list of allowed_intents
+      against the NLP hierarchy and construct a hierarchy dictionary
+      as follows: "{domain: {intent: {}}" if the validation of
+      allowed_intents has passed.
+
+      Parameters:
+         **allowed_intents** (*list*) – A list of allowable intents in
+         the format “domain.intent”.                 If all intents
+         need to be included, the syntax is “domain.*”.
+
+      Returns:
+         A dictionary of NLP hierarchy.
+
+      Return type:
+         (dict)
+
+   inspect(markup, domain=None, intent=None, dynamic_resource=None)
+
+      Inspect the marked up query and print the table of features and
+      weights.
+
+      Parameters:
+         * **markup** (*str*) – The marked up query string.
+
+         * **domain** (*str*) – The gold value for domain
+           classification.
+
+         * **intent** (*str*) – The gold value for intent
+           classification.
+
+         * **dynamic_resource** (*dict**, **optional*) – A dynamic
+           resource to aid NLP inference.
+
+   process(query_text, allowed_nlp_classes=None, allowed_intents=None, language=None, time_zone=None, timestamp=None, dynamic_resource=None, verbose=False)
+
+      Processes the given query using the full hierarchy of natural
+      language processing models         trained for this application.
+
+      Parameters:
+         * **query_text** (*str**, **tuple*) – The raw user text
+           input, or a list of the n-best query transcripts from ASR.
+
+         * **allowed_nlp_classes** (*dict**, **optional*) – A
+           dictionary of the NLP hierarchy that is selected for NLP
+           analysis. An example: "{'smart_home': {'close_door': {}}}"
+           where smart_home is the domain and close_door is the
+           intent.
+
+         * **allowed_intents** (*list**, **optional*) – A list of
+           allowed intents to use for                 the NLP
+           processing.
+
+         * **language** (*str**, **optional*) – Language as
+           specified using a 639-2 code;                 if omitted,
+           English is assumed.
+
+         * **time_zone** (*str**, **optional*) – The name of an IANA
+           time zone, such as                 ‘America/Los_Angeles’,
+           or ‘Asia/Kolkata’                 See the [tz
+           database](https://www.iana.org/time-zones) for more
+           information.
+
+         * **timestamp** (*long**, **optional*) – A unix time stamp
+           for the request (in seconds).
+
+         * **dynamic_resource** (*dict**, **optional*) – A dynamic
+           resource to aid NLP inference.
+
+         * **verbose** (*bool**, **optional*) – If True, returns
+           class probabilities along with class
+           prediction.
+
+      Returns:
+         A processed query object that contains the prediction results
+         from                 applying the full hierarchy of natural
+         language processing models to the input
+         query.
+
+      Return type:
+         (ProcessedQuery)
+
+   process_query(query, allowed_nlp_classes=None, dynamic_resource=None, verbose=False)
+
+      Processes the given query using the full hierarchy of natural
+      language processing models         trained for this application.
+
+      Parameters:
+         * **query** (*Query**, **tuple*) – The user input query, or
+           a list of the n-best transcripts                 query
+           objects.
+
+         * **allowed_nlp_classes** (*dict**, **optional*) – A
+           dictionary of the NLP hierarchy that is selected for NLP
+           analysis. An example: "{'smart_home': {'close_door': {}}}"
+           where smart_home is the domain and close_door is the
+           intent. If "allowed_nlp_classes" is "None", we just use the
+           normal model predict                 functionality.
+
+         * **dynamic_resource** (*dict**, **optional*) – A dynamic
+           resource to aid NLP inference.
+
+         * **verbose** (*bool**, **optional*) – If True, returns
+           class probabilities along with class
+           prediction.
+
+      Returns:
+         A processed query object that contains the prediction results
+         from                 applying the full hierarchy of natural
+         language processing models to the input
+         query.
+
+      Return type:
+         (ProcessedQuery)
+
+   domains
+
+      The domains supported by this application.
+
+class mindmeld.QuestionAnswerer(app_path, resource_loader=None, es_host=None)
+
+   Bases: "object"
+
+   The question answerer is primarily an information retrieval system
+   that provides all the necessary functionality for interacting with
+   the application’s knowledge base.
+
+   build_search(index, ranking_config=None)
+
+      Build a search object for advanced filtered search.
+
+      Parameters:
+         * **index** (*str*) – index name of knowledge base object.
+
+         * **ranking_config** (*dict*) – overriding ranking
+           configuration parameters.
+
+      Returns:
+         a Search object for filtered search.
+
+      Return type:
+         Search
+
+   config(config)
+
+      Summary
+
+      Parameters:
+         **config** – Description
+
+   get(index, **kwargs)
+
+      Gets a collection of documents from the knowledge base matching
+      the provided search criteria. This API provides a simple
+      interface for developers to specify a list of knowledge base
+      field and query string pairs to find best matches in a similar
+      way as in common Web search interfaces. The knowledge base
+      fields to be used depend on the mapping between NLU entity types
+      and corresponding knowledge base objects. For example, a
+      “cuisine” entity type can be mapped to either a knowledge base
+      object or an attribute of a knowledge base object. The mapping
+      is often application specific and is dependent on the data model
+      developers choose to use when building the knowledge base.
+
+      -[ Examples ]-
+
+      >>> question_answerer.get(index='menu_items',
+                                name='pork and shrimp',
+                                restaurant_id='B01CGKGQ40',
+                                _sort='price',
+                                _sort_type='asc')
+
+      Parameters:
+         * **index** (*str*) – The name of an index.
+
+         * **id** (*str*) – The id of a particular document to
+           retrieve.
+
+         * **_sort** (*str*) – Specify the knowledge base field for
+           custom sort.
+
+         * **_sort_type** (*str*) – Specify custom sort type. Valid
+           values are ‘asc’, ‘desc’ and ‘distance’.
+
+         * **_sort_location** (*dict*) – The origin location to be
+           used when sorting by distance.
+
+      Returns:
+         A list of matching documents.
+
+      Return type:
+         list
+
+   classmethod load_kb(app_namespace, index_name, data_file, es_host=None, es_client=None, connect_timeout=2)
+
+      Loads documents from disk into the specified index in the
+      knowledge base. If an index with the specified name doesn’t
+      exist, a new index with that name will be created in the
+      knowledge base.
+
+      Parameters:
+         * **app_namespace** (*str*) – The namespace of the app.
+           Used to prevent collisions between the indices of this app
+           and those of other apps.
+
+         * **index_name** (*str*) – The name of the new index to be
+           created.
+
+         * **data_file** (*str*) – The path to the data file
+           containing the documents to be imported into the knowledge
+           base index. It could be either json or jsonl file.
+
+         * **es_host** (*str*) – The Elasticsearch host server.
+
+         * **es_client** (*Elasticsearch*) – The Elasticsearch
+           client.
+
+         * **connect_timeout** (*int**, **optional*) – The amount of
+           time for a connection to the Elasticsearch host.
+
+mindmeld.configure_logs(**kwargs)
+
+   Helper method for easily configuring logs from the python shell.
+
+   Parameters:
+      **level** (*TYPE**, **optional*) – A logging level recognized by
+      python’s logging module.
+
+
+Subpackages
+===========
+
+* mindmeld.components package
+
+  * Submodules
+
+    * mindmeld.components.classifier module
+
+    * mindmeld.components.dialogue module
+
+    * mindmeld.components.domain_classifier module
+
+    * mindmeld.components.entity_recognizer module
+
+    * mindmeld.components.entity_resolver module
+
+    * mindmeld.components.intent_classifier module
+
+    * mindmeld.components.nlp module
+
+    * mindmeld.components.parser module
+
+    * mindmeld.components.preprocessor module
+
+    * mindmeld.components.question_answerer module
+
+    * mindmeld.components.request module
+
+    * mindmeld.components.role_classifier module
+
+* mindmeld.models package
+
+  * Subpackages
+
+    * mindmeld.models.taggers package
+
+      * Submodules
+
+        * mindmeld.models.taggers.crf module
+
+        * mindmeld.models.taggers.embeddings module
+
+        * mindmeld.models.taggers.lstm module
+
+        * mindmeld.models.taggers.memm module
+
+        * mindmeld.models.taggers.taggers module
+
+  * Submodules
+
+    * mindmeld.models.entity_features module
+
+    * mindmeld.models.helpers module
+
+    * mindmeld.models.model module
+
+    * mindmeld.models.query_features module
+
+    * mindmeld.models.tagger_models module
+
+    * mindmeld.models.text_models module
+
+
+Submodules
+==========
+
+* mindmeld.app module
+
+* mindmeld.app_manager module
+
+* mindmeld.core module
+
+* mindmeld.exceptions module
+
+* mindmeld.gazetteer module
+
+* mindmeld.markup module
+
+* mindmeld.path module
+
+* mindmeld.query_cache module
+
+* mindmeld.query_factory module
+
+* mindmeld.resource_loader module
+
+* mindmeld.ser module
+
+* mindmeld.server module
+
+* mindmeld.system_entity_recognizer module
+
+* mindmeld.tokenizer module

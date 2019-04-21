@@ -1,0 +1,58 @@
+mindmeld.query_cache module
+***************************
+
+This module contains the query cache implementation.
+
+class mindmeld.query_cache.QueryCache(app_path)
+
+   Bases: "object"
+
+   An object that stores ProcessedQuery objects in memory to save time
+   on reloading. ProcessedQuery objects consist of the query itself,
+   the domain/intent classifications, recognized entities in the
+   query, and more.
+
+   dump()
+
+      This function dumps the query cache mapping to disk. This
+      operation is expensive, so use it sparingly!
+
+   get_value(domain, intent, query_text)
+
+      Gets the value associated with the triplet key (domain, intent,
+      query_text).
+
+      Parameters:
+         * **domain** (*str*) – The domain
+
+         * **intent** (*str*) – The intent
+
+         * **query_text** (*str*) – The query text
+
+   load()
+
+      Loads a generated query cache into memory.
+
+   set_value(domain, intent, query_text, processed_query)
+
+      Set value for the corresponding argument parameters.
+
+      Parameters:
+         * **domain** (*str*) – The domain
+
+         * **intent** (*str*) – The intent
+
+         * **query_text** (*str*) – The query text
+
+         * **processed_query** (*ProcessedQuery*) – The
+           ProcessedQuery object corresponding to the domain, intent
+           and query_text
+
+   cached_queries
+
+      A dictionary containing all the cached queries
+
+   versioned_data
+
+      A dictionary containing the MindMeld version in addition to any
+      cached queries.

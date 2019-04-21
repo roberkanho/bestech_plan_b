@@ -1,0 +1,307 @@
+mindmeld.path module
+********************
+
+This module is responsible for locating various MindMeld app files.
+
+mindmeld.path.get_app(app_path)
+
+   Get the Application instance for given application path.
+
+   Parameters:
+      **app_path** (*str*) – The path to an application on disk
+
+   Returns:
+      the MindMeld application
+
+   Return type:
+      mindmeld.app.Application
+
+   Raises:
+      "MindMeldImportError" – when the application can not be found
+
+mindmeld.path.get_app_module_path(app_path)
+
+   Gets the path to the application file (app.py) for a given
+   application if it exists.
+
+   Parameters:
+      **app_path** (*str*) – The path to the app data.
+
+   Returns:
+      The path of the app module file.
+
+   Return type:
+      str
+
+mindmeld.path.get_cached_blueprint_path(name)
+
+   Gets the path to a cached version of the given blueprint.
+
+   Parameters:
+      **name** (*str*) – The name of the blueprint
+
+   Returns:
+      The path to the blueprint archives.
+
+   Return type:
+      str
+
+mindmeld.path.get_config_module_path(app_path)
+
+   Gets the path to the configuration file (config.py) for a given
+   application.
+
+   Parameters:
+      **app_path** (*str*) – The path to the app data.
+
+   Returns:
+      The path of the config module file.
+
+   Return type:
+      str
+
+mindmeld.path.get_domain_model_paths(app_path, model_name=None, timestamp=None)
+
+   Gets the path to the domain classifier model as well as the path to
+   a timestamp-cached domain classifier model.
+
+   Parameters:
+      * **app_path** (*str*) – The path to the app data.
+
+      * **model_name** (*str*) – The name of the model. Allows
+        multiple models to be stored.
+
+      * **timestamp** (*str*) – The timestamp string to store cached
+        models in
+
+   Returns:
+      (str) A tuple with the main model path and the cached model path
+
+mindmeld.path.get_domains(app_path)
+
+   Gets all domains for a given application.
+
+   Parameters:
+      **app_path** (*str*) – The path to the app data.
+
+   Returns:
+      (set of str) A list of domain names.
+
+mindmeld.path.get_entity_folder(app_path, entity)
+
+   Gets the path to the folder for a given entity.
+
+   Parameters:
+      * **app_path** (*str*) – The path to the app data.
+
+      * **entity** (*str*) – An entity under the application.
+
+   Returns:
+      (str) The path for an entity folder
+
+mindmeld.path.get_entity_gaz_path(app_path, entity)
+
+   Gets the path to the gazetteer text file for a given entity.
+
+   Parameters:
+      * **app_path** (*str*) – The path to the app data.
+
+      * **entity** (*str*) – An entity under the application.
+
+   Returns:
+      (str) The path for a mapping of the entity
+
+mindmeld.path.get_entity_map_path(app_path, entity)
+
+   Gets the path to the entity mapping file (mapping.json) for a given
+   entity.
+
+   Parameters:
+      * **app_path** (*str*) – The path to the app data.
+
+      * **entity** (*str*) – An entity under the application.
+
+   Returns:
+      (str) The path for a mapping of the entity
+
+mindmeld.path.get_entity_model_paths(app_path, domain, intent, model_name=None, timestamp=None)
+
+   Gets the path to the entity recognizer model as well as the path to
+   a timestamp-cached entity recognizer model.
+
+   Parameters:
+      * **app_path** (*str*) – The path to the app data.
+
+      * **domain** (*str*) – A domain under the application.
+
+      * **intent** (*str*) – A intent under the domain.
+
+      * **model_name** (*str*) – The name of the model. Allows
+        multiple models to be stored.
+
+      * **timestamp** (*str*) – The timestamp string to store cached
+        models in
+
+   Returns:
+      (tuple) A tuple with the main model path and the cached model
+      path
+
+mindmeld.path.get_entity_types(app_path)
+
+   Gets all entities for an application.
+
+   Parameters:
+      **app_path** (*str*) – The path to the app data.
+
+   Returns:
+      (str) The path for this app’s domain classifier model.
+
+mindmeld.path.get_gazetteer_data_path(app_path, gaz_name, model_name=None)
+
+   Gets path to the saved gazetteer pickle.
+
+   Parameters:
+      * **app_path** (*str*) – The path to the app data.
+
+      * **gaz_name** (*str*) – The name of the gazetteer.
+
+      * **model_name** (*str*) – The name of the model.
+
+   Returns:
+      (str) The path for the gazetteer pickle.
+
+mindmeld.path.get_generated_data_folder(app_path)
+
+   Gets the path to the folder containing files the app generates.
+
+   Parameters:
+      **app_path** (*str*) – The path to the app data.
+
+   Returns:
+      The path for this app’s generated files
+
+   Return type:
+      str
+
+mindmeld.path.get_indexes(app_path)
+
+   Gets all indexes for an application.
+
+   Parameters:
+      **app_path** (*str*) – The path to the app data.
+
+   Returns:
+      (str) The path for this app’s domain classifier model.
+
+mindmeld.path.get_intent_model_paths(app_path, domain, model_name=None, timestamp=None)
+
+   Gets the path to the intent classifier model as well as the path to
+   a timestamp-cached intent classifier model.
+
+   Parameters:
+      * **app_path** (*str*) – The path to the app data.
+
+      * **domain** (*str*) – A domain under the application.
+
+      * **model_name** (*str*) – The name of the model. Allows
+        multiple models to be stored.
+
+      * **timestamp** (*str*) – The timestamp string to store cached
+        models in
+
+   Returns:
+      (tuple) A tuple with the main model path and the cached model
+      path
+
+mindmeld.path.get_intents(app_path, domain)
+
+   Gets all intents for a given domain and application.
+
+   Parameters:
+      * **app_path** (*str*) – The path to the app data.
+
+      * **domain** (*str*) – A domain under the application.
+
+   Returns:
+      (set of str) A list of intent names.
+
+mindmeld.path.get_labeled_query_file_path(app_path, domain, intent, filename)
+
+   Gets path to a labeled query file corresponding to a specific
+   domain and intent.
+
+   Parameters:
+      * **app_path** (*str*) – The path to the app data.
+
+      * **domain** (*str*) – A domain under the application.
+
+      * **intent** (*str*) – A intent under the domain.
+
+      * **filename** (*str*) – The name of the queries file.
+
+   Returns:
+      (str) The full path of the specified file.
+
+mindmeld.path.get_labeled_query_tree(app_path, patterns=None)
+
+   Gets labeled query files for a given domain and application.
+
+   Parameters:
+      * **app_path** (*str*) – The path to the app data.
+
+      * **patterns** (*list**(**str**)*) – A list of file patterns
+        to match
+
+   Returns:
+      (dict) A set of labeled query files.
+
+mindmeld.path.get_ranking_file_path(app_path, index)
+
+   Gets the path to the ranking.json file for a given entity.
+
+   Parameters:
+      * **app_path** (*str*) – The path to the app data.
+
+      * **index** (*str*) – A knowledge base index under the
+        application.
+
+   Returns:
+      (str) The path for a mapping of the entity
+
+mindmeld.path.get_role_model_paths(app_path, domain, intent, entity, model_name=None, timestamp=None)
+
+   Gets the path to the role classifier model as well as the path to a
+   timestamp-cached role classifier model.
+
+   Parameters:
+      * **app_path** (*str*) – The path to the app data.
+
+      * **domain** (*str*) – A domain under the application.
+
+      * **intent** (*str*) – A intent under the domain.
+
+      * **entity** (*str*) – An entity under the intent
+
+      * **model_name** (*str*) – The name of the model. Allows
+        multiple models to be stored.
+
+      * **timestamp** (*str*) – The timestamp string to store cached
+        models in
+
+   Returns:
+      (tuple) A tuple with the main model path and the cached model
+      path
+
+mindmeld.path.get_user_config_path()
+
+   Gets the path to the current configuration file used by MindMeld.
+
+   Returns:
+      The path to the current user’s MindMeld configuration file.
+
+   Return type:
+      str
+
+mindmeld.path.safe_path(func)
+
+   A decorator to make the path safe by replacing unsafe characters

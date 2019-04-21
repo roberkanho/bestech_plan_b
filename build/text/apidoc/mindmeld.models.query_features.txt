@@ -1,0 +1,221 @@
+mindmeld.models.query_features module
+*************************************
+
+This module contains feature extractors for queries
+
+mindmeld.models.query_features.char_ngrams(n, word, **args)
+
+   This function extracts character ngrams for the given word
+
+   Parameters:
+      * **n** (*int*) – Max size of n-gram to extract
+
+      * **word** (*str*) – The word to be extract n-grams from
+
+   Returns:
+      A list of character n-grams for the given word
+
+   Return type:
+      list
+
+mindmeld.models.query_features.enabled_stemming(**args)
+
+   Feature extractor for enabling stemming of the query
+
+mindmeld.models.query_features.extract_bag_of_words_features(ngram_lengths_to_start_positions, thresholds=(0, ), **args)
+
+   Returns a bag-of-words feature extractor.
+
+   Parameters:
+      * **ngram_lengths_to_start_positions** (*dict*) –
+
+      * **thresholds** (*int*) – Cut off value to include word in
+        n-gram vocab
+
+   Returns:
+      (function) The feature extractor.
+
+mindmeld.models.query_features.extract_char_ngrams(lengths=(1, ), thresholds=(0, ), **args)
+
+   Extract character ngrams of specified lengths.
+
+   Parameters:
+      * **lengths** (*list of int*) – The ngram length.
+
+      * **thresholds** (*list of int*) – frequency cut off value to
+        include ngram in vocab
+
+   Returns:
+      (function) An feature extraction function that takes a query and
+         returns character ngrams of specified lengths.
+
+mindmeld.models.query_features.extract_char_ngrams_features(ngram_lengths_to_start_positions, thresholds=(0, ), **args)
+
+   Returns a character n-gram feature extractor.
+
+   Parameters:
+      * **ngram_lengths_to_start_positions** (*dict*) –
+
+      * **window of tokens to be considered relative to the**
+        (*The*) –
+
+      * **token while extracting char n-grams** (*current*) –
+
+      * **thresholds** (*int*) – Cut off value to include word in
+        n-gram vocab
+
+   Returns:
+      (function) The feature extractor.
+
+mindmeld.models.query_features.extract_edge_ngrams(lengths=(1, ), **args)
+
+   Extract ngrams of some specified lengths.
+
+   Parameters:
+      **lengths** (*list of int*) – The ngram length.
+
+   Returns:
+      (function) An feature extraction function that takes a query and
+      returns ngrams of the specified lengths at start and end of
+      query.
+
+mindmeld.models.query_features.extract_freq(bins=5, **args)
+
+   Extract frequency bin features.
+
+   Parameters:
+      **bins** (*int*) – The number of frequency bins (besides OOV)
+
+   Returns:
+      A feature extraction function that returns the log of the
+      count of query tokens within each frequency bin.
+
+   Return type:
+      (function)
+
+mindmeld.models.query_features.extract_gaz_freq(**args)
+
+   Extract frequency bin features for each gazetteer
+
+   Returns:
+      A feature extraction function that returns the log of the
+      count of query tokens within each gazetteer’s frequency bins.
+
+   Return type:
+      (function)
+
+mindmeld.models.query_features.extract_in_gaz_feature(scaling=1, **args)
+
+   Returns a feature extractor that generates a set of features
+   indicating the presence of query n-grams in different entity
+   gazetteers. Used by the domain and intent classifiers when the ‘in-
+   gaz’ feature is specified in the config.
+
+   Parameters:
+      * **scaling** (*int*) – A multiplicative scale factor to the
+        "ratio_pop" and "ratio" features of
+
+      * **in-gaz feature set.** (*the*) –
+
+   Returns:
+      Returns an extractor function
+
+   Return type:
+      function
+
+mindmeld.models.query_features.extract_in_gaz_ngram_features(**args)
+
+   Returns a feature extractor for surrounding ngrams in gazetteers
+
+mindmeld.models.query_features.extract_in_gaz_span_features(**args)
+
+   Returns a feature extractor for properties of spans in gazetteers
+
+mindmeld.models.query_features.extract_length(**args)
+
+   Extract length measures (tokens and chars; linear and log) on whole
+   query.
+
+   Returns:
+      (function) A feature extraction function that takes a query and
+      returns number of tokens and characters on linear and log scales
+
+mindmeld.models.query_features.extract_ngrams(lengths=(1, ), thresholds=(0, ), **args)
+
+   Extract ngrams of some specified lengths.
+
+   Parameters:
+      * **lengths** (*list of int*) – The ngram length.
+
+      * **thresholds** (*list of int*) – frequency cut off value to
+        include ngram in vocab
+
+   Returns:
+      (function) An feature extraction function that takes a query and
+      returns ngrams of the specified lengths.
+
+mindmeld.models.query_features.extract_query_string(scaling=1000, **args)
+
+   Extract whole query string as a feature.
+
+   Returns:
+      (function) A feature extraction function that takes a query and
+      returns the whole query string for exact matching
+
+mindmeld.models.query_features.extract_sys_candidate_features(start_positions=(0, ), **args)
+
+   Return an extractor for features based on a heuristic guess of
+   numeric candidates at/near the current token.
+
+   Parameters:
+      **start_positions** (*tuple*) – positions relative to current
+      token (=0)
+
+   Returns:
+      (function) The feature extractor.
+
+mindmeld.models.query_features.extract_sys_candidates(entities=None, **args)
+
+   Return an extractor for features based on a heuristic guess of
+   numeric         candidates in the current query.
+
+   Returns:
+      (function) The feature extractor.
+
+mindmeld.models.query_features.extract_word_shape(lengths=(1, ), **args)
+
+   Extracts word shape for ngrams of specified lengths.
+
+   Parameters:
+      **lengths** (*list of int*) – The ngram length
+
+   Returns:
+      (function) An feature extraction function that takes a query and
+      returns ngrams of word shapes, for n of specified lengths.
+
+mindmeld.models.query_features.find_ngrams(input_list, n, **args)
+
+   Generates all n-gram combinations from a list of strings
+
+   Parameters:
+      * **input_list** (*list*) – List of string to n-gramize
+
+      * **n** (*int*) – The size of the n-gram
+
+   Returns:
+      A list of ngrams across all the strings in the             input
+      list
+
+   Return type:
+      list
+
+mindmeld.models.query_features.update_features_sequence(feat_seq, update_feat_seq, **args)
+
+   Update a list of features with another parallel list of features.
+
+   Parameters:
+      * **feat_seq** (*list of dict*) – The original list of feature
+        dicts which gets mutated.
+
+      * **update_feat_seq** (*list of dict*) – The list of features
+        to update with.

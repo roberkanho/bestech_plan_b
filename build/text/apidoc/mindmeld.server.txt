@@ -1,0 +1,29 @@
+mindmeld.server module
+**********************
+
+This module contains the class which serves the MindMeld API.
+
+class mindmeld.server.MindMeldRequest(environ, populate_request=True, shallow=False)
+
+   Bases: "flask.wrappers.Request"
+
+   This class represents requests to the MindMeldServer. It extends
+   flask.Request to provide custom handling of certain exceptions.
+
+   on_json_loading_failed(exc)
+
+      Called if decoding of the JSON data failed.
+
+      The return value of this method is used by get_json() when an
+      error occurred. The default implementation just raises a
+      BadRequest exception.
+
+class mindmeld.server.MindMeldServer(app_manager)
+
+   Bases: "object"
+
+   This class sets up a Flask web server.
+
+   run(**kwargs)
+
+      Starts the flask server.

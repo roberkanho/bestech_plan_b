@@ -1,0 +1,71 @@
+mindmeld.models.taggers.memm module
+***********************************
+
+This module contains the Memm entity recognizer.
+
+class mindmeld.models.taggers.memm.MemmModel(**parameters)
+
+   Bases: "mindmeld.models.taggers.taggers.Tagger"
+
+   A maximum-entropy Markov model.
+
+   extract_and_predict(examples, config, resources)
+
+   static extract_example_features(example, config, resources)
+
+      Extracts feature dicts for each token in an example.
+
+      Parameters:
+         * **example** (*mindmeld.core.Query*) – A query.
+
+         * **config** (*ModelConfig*) – The ModelConfig which may
+           contain information used for feature extraction.
+
+         * **resources** (*dict*) – Resources which may be used for
+           this model’s feature extraction.
+
+      Returns:
+         Features.
+
+      Return type:
+         (list[dict])
+
+   extract_features(examples, config, resources, y=None, fit=True)
+
+      Transforms a list of examples into a feature matrix. Use
+      extract_and_predict if you are extracting features for an
+      example at test time, since the previous tag prediction is
+      needed as a feature of the next tag.
+
+      Parameters:
+         * **examples** (*list of core.Query*) – The examples.
+
+         * **config** (*ModelConfig*) – The ModelConfig which may
+           contain information used for feature extraction
+
+         * **resources** (*dict*) – Resources which may be used for
+           this model’s feature extraction
+
+      Returns:
+         tuple containing:
+
+            * (numpy.matrix): The feature matrix.
+
+            * (numpy.array): The group labels for examples.
+
+      Return type:
+         (tuple)
+
+   fit(X, y)
+
+   get_params(deep=True)
+
+   static load(model_path)
+
+   predict(X, dynamic_resource=None)
+
+   predict_proba(examples, config, resources)
+
+   set_params(**parameters)
+
+   setup_model(config)

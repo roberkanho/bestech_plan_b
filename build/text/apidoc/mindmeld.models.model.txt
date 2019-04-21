@@ -1,0 +1,515 @@
+mindmeld.models.model module
+****************************
+
+This module contains base classes for models defined in the models
+subpackage.
+
+class mindmeld.models.model.EntityLabelEncoder(config)
+
+   Bases: "mindmeld.models.model.LabelEncoder"
+
+   decode(tags_by_example, **kwargs)
+
+      Decodes the labels from the tags passed in for each query
+
+      Parameters:
+         * **tags_by_example** (*list*) – A list of tags per query
+
+         * **kwargs** (*dict*) – A dict containing atleast the
+           “examples” key, which is a list of queries to process
+
+      Returns:
+         A list of decoded labels per query
+
+      Return type:
+         list
+
+   encode(labels, **kwargs)
+
+      “Gets a list of joint app and system IOB tags from each query’s
+      entities.
+
+      Parameters:
+         * **labels** (*list*) – A list of labels associated with
+           each query
+
+         * **kwargs** (*dict*) – A dict containing atleast the
+           “examples” key, which is a list of queries to process
+
+      Returns:
+         A list of list of joint app and system IOB tags from each
+            query’s entities
+
+      Return type:
+         list
+
+class mindmeld.models.model.EntityModelEvaluation(config, results)
+
+   Bases: "mindmeld.models.model.SequenceModelEvaluation"
+
+   Generates some statistics specific to entity recognition
+
+   get_stats()
+
+   print_stats()
+
+class mindmeld.models.model.EvaluatedExample
+
+   Bases: "mindmeld.models.model.EvaluatedExample"
+
+   Represents the evaluation of a single example
+
+   example
+
+      The example being evaluated
+
+   expected
+
+      The expected label for the example
+
+   predicted
+
+      The predicted label for the example
+
+   proba
+
+      *dict* – Maps labels to their predicted probabilities
+
+   label_type
+
+      *str* – One of CLASS_LABEL_TYPE or ENTITIES_LABEL_TYPE
+
+   is_correct
+
+class mindmeld.models.model.LabelEncoder(config)
+
+   Bases: "object"
+
+   The label encoder is responsible for converting between rich label
+   objects such as a ProcessedQuery and basic formats a model can
+   interpret.
+
+   A MindMeld model uses its label encoder at fit time to encode
+   labels into a form it can deal with, and at predict time to decode
+   predictions into objects
+
+   static decode(classes, **kwargs)
+
+      Decodes a vector of classes into a list of labels
+
+      Parameters:
+         **classes** (*list*) – A list of classes
+
+      Returns:
+         The decoded labels
+
+      Return type:
+         list
+
+   static encode(labels, **kwargs)
+
+      Transforms a list of label objects into a vector of classes.
+
+      Parameters:
+         **labels** (*list*) – A list of labels to encode
+
+class mindmeld.models.model.Model(config)
+
+   Bases: "object"
+
+   An abstract class upon which all models are based.
+
+   config
+
+      *ModelConfig* – The configuration for the model
+
+   evaluate(examples, labels)
+
+      Evaluates the predictions of each query against the labels
+      provided.
+
+      Parameters:
+         * **examples** (*list*) – A list of queries to predict
+
+         * **labels** (*list*) – A list of labels corresponding to
+           each query
+
+      Returns:
+         an list containing ModelEvaluation information about the
+         evaluation for each query
+
+      Return type:
+         list(ModelEvaluation)
+
+   fit(examples, labels, params=None)
+
+   get_feature_matrix(examples, y=None, fit=False)
+
+   get_resource(name)
+
+   initialize_resources(resource_loader, examples=None, labels=None)
+
+      Load the required resources for feature extractors. Each feature
+      extractor uses         @requires decorator to declare required
+      resources. Based on feature list in model config         a list
+      of required resources are compiled, and the passed in resource
+      loader is then used         to load the resources accordingly.
+
+      Parameters:
+         * **resource_loader** (*ResourceLoader*) – application
+           resource loader object
+
+         * **examples** (*list*) – Optional. A list of examples.
+
+         * **labels** (*list*) – Optional. A parallel list to
+           examples. The gold labels                            for
+           each example.
+
+   predict(examples, dynamic_resource=None)
+
+      Predicts a list of class labels for the given list of queries
+      using the trained
+         classification model
+
+      Parameters:
+         * **examples** (*list*) – A list of queries to predict
+
+         * **dynamic_resource** (*dict*) – A dictionary containing
+           dynamic resource keys like dynamic gazetteers that is used
+           to bias the NLP classifier
+
+      Returns:
+         A list of predicted labels per query
+
+      Return type:
+         list
+
+   predict_proba(examples)
+
+      Runs prediction on each of the given queries and generates
+      multiple hypotheses with their associated probabilities using
+      the trained classification model
+
+      Parameters:
+         **examples** (*list of mindmeld.core.Query*) – a list of
+         queries to train on
+
+      Returns:
+         a list of predicted labels                 with confidence
+         scores
+
+      Return type:
+         list of tuples of (mindmeld.core.QueryEntity)
+
+   register_resources(**kwargs)
+
+      Registers resources which are accessible to feature extractors
+
+      Parameters:
+         ****kwargs** – dictionary of resources to register
+
+   requires_resource(resource)
+
+   select_params(examples, labels, selection_settings=None)
+
+      Selects the best set of hyper-parameters for a given set of
+      examples and true labels
+         through cross-validation
+
+      Parameters:
+         * **examples** – A list of example queries
+
+         * **labels** – A list of labels associated with the queries
+
+         * **selection_settings** – A dictionary of parameter lists
+           to select from
+
+      Returns:
+         A dictionary of optimized parameters to use
+
+      Return type:
+         dict
+
+   view_extracted_features(example, dynamic_resource=None)
+
+class mindmeld.models.model.ModelConfig(model_type=None, example_type=None, label_type=None, features=None, model_settings=None, params=None, param_selection=None, train_label_set=None, test_label_set=None)
+
+   Bases: "object"
+
+   A value object representing a model configuration.
+
+   model_type
+
+      *str* – The name of the model type. Will be used to find the
+      model class to instantiate
+
+   example_type
+
+      *str* – The type of the examples which will be passed into
+      *fit()* and *predict()*. Used to select feature extractors
+
+   label_type
+
+      *str* – The type of the labels which will be passed into *fit()*
+      and returned by *predict()*. Used to select the label encoder
+
+   model_settings
+
+      *dict* – Settings specific to the model type specified
+
+   params
+
+      *dict* – Params to pass to the underlying classifier
+
+   param_selection
+
+      *dict* – Configuration for param selection (using cross
+      validation) {‘type’: ‘shuffle’, ‘n’: 3, ‘k’: 10, ‘n_jobs’: 2,
+      ‘scoring’: ‘’, ‘grid’: {} }
+
+   features
+
+      *dict* – The keys are the names of feature extractors and the
+      values are either a kwargs dict which will be passed into the
+      feature extractor function, or a callable which will be used as
+      to extract features
+
+   train_label_set
+
+      *regex pattern* – The regex pattern for finding training file
+      names.
+
+   test_label_set
+
+      *regex pattern* – The regex pattern for finding testing file
+      names.
+
+   get_ngram_lengths_and_thresholds(rname)
+
+      Returns the n-gram lengths and thresholds to extract to optimize
+      resource collection
+
+      Parameters:
+         **rname** (*string*) – Name of the resource
+
+      Returns:
+         tuple containing:
+
+            * lengths (list of int): list of n-gram lengths to be
+              extracted
+
+            * thresholds (list of int): thresholds to be applied to
+              corresponding n-gram lengths
+
+      Return type:
+         (tuple)
+
+   required_resources()
+
+      Returns the resources this model requires
+
+      Returns:
+         set of required resources for this model
+
+      Return type:
+         set
+
+   resolve_config(new_config)
+
+      This method resolves any config incompatibility issues by
+      loading the latest settings from the app config to the current
+      config
+
+      Parameters:
+         **new_config** (*ModelConfig*) – The ModelConfig representing
+         the app’s latest config
+
+   to_dict()
+
+      Converts the model config object into a dict
+
+      Returns:
+         A dict version of the config
+
+      Return type:
+         dict
+
+   to_json()
+
+      Converts the model config object to JSON
+
+      Returns:
+         JSON representation of the classifier
+
+      Return type:
+         str
+
+   example_type
+
+   features
+
+   label_type
+
+   model_settings
+
+   model_type
+
+   param_selection
+
+   params
+
+   test_label_set
+
+   train_label_set
+
+class mindmeld.models.model.ModelEvaluation(config, results)
+
+   Bases: "mindmeld.models.model.ModelEvaluation"
+
+   Represents the evaluation of a model at a specific configuration
+   using a collection of examples and labels.
+
+   config
+
+      *ModelConfig* – The model config used during evaluation.
+
+   results
+
+      *list of EvaluatedExample* – A list of the evaluated examples.
+
+   correct_results()
+
+      Returns:
+         Collection of the examples which were correct
+
+      Return type:
+         iterable
+
+   get_accuracy()
+
+      The accuracy represents the share of examples whose predicted
+      labels exactly matched their expected labels.
+
+      Returns:
+         The accuracy of the model.
+
+      Return type:
+         float
+
+   get_stats()
+
+      Returns a structured stats object for evaluation.
+
+      Returns:
+         Structured dict containing evaluation statistics. Contains
+         precision,                   recall, f scores, support, etc.
+
+      Return type:
+         dict
+
+   incorrect_results()
+
+      Returns:
+         Collection of the examples which were incorrect
+
+      Return type:
+         iterable
+
+   print_stats()
+
+      Prints a useful stats table for evaluation.
+
+      Returns:
+         Structured dict containing evaluation statistics. Contains
+         precision,                   recall, f scores, support, etc.
+
+      Return type:
+         dict
+
+   raw_results()
+
+      Exposes raw vectors of expected and predicted for data
+      scientists to use for any additional evaluation metrics or to
+      generate graphs of their choice.
+
+      Returns:
+         tuple containing:
+
+            * NamedTuple: RawResults named tuple containing
+
+            * expected: vector of predicted classes (numeric value)
+
+            * predicted: vector of gold classes (numeric value)
+
+            * text_labels: a list of all the text label values, the
+              index of the text label in
+
+            * this array is the numeric label
+
+      Return type:
+         (tuple)
+
+class mindmeld.models.model.RawResults(predicted, expected, text_labels, predicted_flat=None, expected_flat=None)
+
+   Bases: "object"
+
+   Represents the raw results of a set of evaluated examples. Useful
+   for generating stats and graphs.
+
+   predicted
+
+      *list* – A list of predictions. For sequences this is a list of
+      lists, and for standard classifieris this is a 1d array. All
+      classes are in their numeric representations for ease of use
+      with evaluation libraries and graphing.
+
+   expected
+
+      *list* – Same as predicted but contains the true or gold values.
+
+   text_labels
+
+      *list* – A list of all the text label values, the index of the
+      text label in this array is the numeric label
+
+   predicted_flat
+
+      *list* – (Optional): For sequence models this is a flattened
+      list of all predicted tags (1d array)
+
+   expected_flat
+
+      *list* – (Optional): For sequence models this is a flattened
+      list of all gold tags
+
+class mindmeld.models.model.SequenceModelEvaluation(config, results)
+
+   Bases: "mindmeld.models.model.ModelEvaluation"
+
+   get_stats()
+
+      Prints model evaluation stats in a table to stdout
+
+   print_stats()
+
+      Prints model evaluation stats to stdout
+
+   raw_results()
+
+      Returns the raw results of the model evaluation
+
+class mindmeld.models.model.StandardModelEvaluation(config, results)
+
+   Bases: "mindmeld.models.model.ModelEvaluation"
+
+   get_stats()
+
+      Prints model evaluation stats in a table to stdout
+
+   print_stats()
+
+      Prints model evaluation stats to stdout
+
+   raw_results()
+
+      Returns the raw results of the model evaluation

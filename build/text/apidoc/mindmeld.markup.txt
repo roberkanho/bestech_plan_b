@@ -1,0 +1,209 @@
+mindmeld.markup module
+**********************
+
+The markup module contains functions for interacting with the MindMeld
+Markup language for representing annotations of query text inline.
+
+mindmeld.markup.bootstrap_query_file(input_file, output_file, nlp, **kwargs)
+
+   Apply predicted annotations to a file of text queries
+
+   Parameters:
+      * **input_file** (*str*) – filename of queries to be processed
+
+      * **output_file** (*str** or **None*) – filename for processed
+        queries
+
+      * **nlp** (*NaturalLanguageProcessor*) – an application’s NLP
+        with built models
+
+      * **kwargs** (*dict*) – A dictionary of additional args
+
+mindmeld.markup.bootstrap_query_row(proc_query, show_confidence, **kwargs)
+
+   Produce predicted annotation values and confidences for a single
+   query
+
+   Parameters:
+      * **proc_query** (*ProcessedQuery*) – a labeled query
+
+      * **show_confidence** (*bool*) – whether to generate
+        confidence columns
+
+      * ****kwargs** – flags indicating which columns to generate
+
+   Returns:
+      (dict)
+
+mindmeld.markup.dump_queries(queries, markup_format='mindmeld', **kwargs)
+
+   Converts a collection of processed queries to marked up query text
+
+   Parameters:
+      * **queries** (*iterable*) – A collection of processed queries
+
+      * **markup_format** (*str**, **optional*) – The format to use.
+        Valid formats include ‘mindmeld’ and ‘brat’. Defaults to
+        ‘mindmeld’
+
+      * ****kwargs** – additional format specific parameters may be
+        passed in as keyword arguments.
+
+   Yields:
+      *str or tuple* – A marked up representation of the query
+
+mindmeld.markup.dump_query(processed_query, markup_format='mindmeld', **kwargs)
+
+   Converts a processed query into marked up query text.
+
+   Parameters:
+      * **processed_query** (*ProcessedQuery*) – The query to
+        convert
+
+      * **markup_format** (*str**, **optional*) – The format to use.
+        Valid formats include ‘mindmeld’ and ‘brat’. Defaults to
+        ‘mindmeld’
+
+      * ****kwargs** – additional format specific parameters may be
+        passed in as keyword arguments.
+
+   Returns:
+      A marked up representation of the query
+
+   Return type:
+      str
+
+   Raises:
+      "ValueError"
+
+mindmeld.markup.load_query(markup, query_factory=None, domain=None, intent=None, is_gold=False, query_options=None)
+
+   Creates a processed query object from marked up query text.
+
+   Parameters:
+      * **markup** (*str*) – The marked up query text.
+
+      * **query_factory** (*QueryFactory**, **optional*) – An object
+        which can create queries.
+
+      * **domain** (*str**, **optional*) – The name of the domain
+        annotated for the query.
+
+      * **intent** (*str**, **optional*) – The name of the intent
+        annotated for the query.
+
+      * **is_gold** (*bool**, **optional*) – True if the markup
+        passed in is a reference, human-labeled example. Defaults to
+        False.
+
+      * **query_options** (*dict**, **optional*) – A dict containing
+        options for creating a Query, such as *language*, *time_zone*
+        and *timestamp*
+
+   Returns:
+      a processed query
+
+   Return type:
+      ProcessedQuery
+
+mindmeld.markup.load_query_file(file_path, query_factory=None, domain=None, intent=None, is_gold=False, query_cache=None)
+
+   Loads the queries from the specified file
+
+   Parameters:
+      * **file_path** (*str*) – The path of the file to load
+
+      * **query_factory** (*QueryFactory**, **optional*) – An object
+        which can create queries.
+
+      * **domain** (*str**, **optional*) – The name of the domain
+        annotated for the query.
+
+      * **intent** (*str**, **optional*) – The name of the intent
+        annotated for the query.
+
+      * **is_gold** (*bool**, **optional*) – True if the markup
+        passed in is a reference, human-labeled example. Defaults to
+        False.
+
+      * **query_cache** (*QueryCache*) – A container containing
+        cache query objects
+
+   Returns:
+      a processed query
+
+   Return type:
+      ProcessedQuery
+
+mindmeld.markup.mark_down(markup)
+
+   Removes all entity mark up from a string
+
+   Parameters:
+      **markup** (*str*) – A marked up string
+
+   Returns:
+      A clean string with no mark up
+
+   Return type:
+      str
+
+mindmeld.markup.mark_down_file(file_path)
+
+   Read all annotated queries from the input file and remove all the
+   annotations
+
+   Parameters:
+      **file_path** (*str*) – The path of the file to load
+
+   Yields:
+      *(str)* – marked down query text for each line
+
+mindmeld.markup.process_markup(markup, query_factory, query_options)
+
+   This function takes in some text and returns a constructed Query
+   object associated with the
+      text, along with other objects like a list of entities.
+
+   Parameters:
+      * **markup** (*str*) – The markup string to process
+
+      * **query_factory** (*QueryFactory*) – The factory used to
+        construct Query objects
+
+      * **query_options** (*dict*) – A dictionary containing options
+        for language, time_zone and time_stamp
+
+   Returns:
+      Returns a tuple of the raw text, the Query object associated
+      with the text and a list of entities (ProcessedQuery) associated
+      with the text
+
+   Return type:
+      (str, Query, list)
+
+mindmeld.markup.read_query_file(file_path)
+
+   Summary
+
+   Parameters:
+      **file_path** (*str*) – The path of the file to load
+
+   Yields:
+      *str* – query text for each line
+
+mindmeld.markup.validate_markup(markup, query_factory)
+
+   Checks whether the markup text is well-formed.
+
+   Parameters:
+      * **markup** (*str*) – The marked up query text
+
+      * **query_factory** (*QueryFactory*) – An object which can
+        create queries
+
+   Returns:
+      True if the markup is valid
+
+   Return type:
+      bool

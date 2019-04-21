@@ -1,0 +1,120 @@
+mindmeld.components.entity_recognizer module
+********************************************
+
+This module contains the entity recognizer component of the MindMeld
+natural language processor.
+
+class mindmeld.components.entity_recognizer.EntityRecognizer(resource_loader, domain, intent)
+
+   Bases: "mindmeld.components.classifier.Classifier"
+
+   An entity recognizer which is used to identify the entities for a
+   given query. It is trained using all the labeled queries for a
+   particular intent. The labels are the entity annotations for each
+   query.
+
+   domain
+
+      *str* – The domain that this entity recognizer belongs to
+
+   intent
+
+      *str* – The intent that this entity recognizer belongs to
+
+   entity_types
+
+      *set* – A set containing the entity types which can be
+      recognized
+
+   dump(model_path, incremental_model_path=None)
+
+      Save the model.
+
+      Parameters:
+         * **model_path** (*str*) – The model path.
+
+         * **incremental_model_path** (*str**, **Optional*) – The
+           timestamped folder where the cached                 models
+           are stored.
+
+   fit(queries=None, label_set=None, incremental_timestamp=None, **kwargs)
+
+      Trains the entity recognition model using the provided training
+      queries.
+
+      Parameters:
+         * **queries** (*list**[**ProcessedQuery**]*) – The labeled
+           queries to use as training data.
+
+         * **label_set** (*list**, **optional*) – A label set to
+           load. If not specified, use the default.
+
+         * **incremental_timestamp** (*str**, **optional*) – The
+           timestamp folder to cache models in.
+
+   inspect(query, gold_label=None, dynamic_resource=None)
+
+   load(model_path)
+
+      Loads the trained entity recognition model from disk.
+
+      Parameters:
+         **model_path** (*str*) – The location on disk where the model
+         is stored.
+
+   predict(query, time_zone=None, timestamp=None, dynamic_resource=None)
+
+      Predicts entities for the given query using the trained
+      recognition model.
+
+      Parameters:
+         * **query** (*Query**, **str*) – The input query.
+
+         * **time_zone** (*str**, **optional*) – The name of an IANA
+           time zone, such as ‘America/Los_Angeles’, or ‘Asia/Kolkata’
+           See the [tz database](https://www.iana.org/time-zones) for
+           more information.
+
+         * **timestamp** (*long**, **optional*) – A unix time stamp
+           for the request (in seconds).
+
+         * **dynamic_resource** (*dict**, **optional*) – A dynamic
+           resource to aid NLP inference.
+
+      Returns:
+         The predicted class label.
+
+      Return type:
+         (str)
+
+   predict_proba(query, time_zone=None, timestamp=None, dynamic_resource=None)
+
+      Runs prediction on a given query and generates multiple entity
+      tagging hypotheses with their associated probabilities using the
+      trained entity recognition model
+
+      Parameters:
+         * **query** (*Query**, **str*) – The input query.
+
+         * **time_zone** (*str**, **optional*) – The name of an IANA
+           time zone, such as ‘America/Los_Angeles’, or ‘Asia/Kolkata’
+           See the [tz database](https://www.iana.org/time-zones) for
+           more information.
+
+         * **timestamp** (*long**, **optional*) – A unix time stamp
+           for the request (in seconds).
+
+         * **dynamic_resource** (*optional*) – Dynamic resource,
+           unused.
+
+      Returns:
+         A list of tuples of the form (Entity list, float) grouping
+         potential entity                 tagging hypotheses and their
+         probabilities.
+
+      Return type:
+         (list)
+
+   CLF_TYPE = 'entity'
+
+      The classifier type.

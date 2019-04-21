@@ -1,0 +1,331 @@
+mindmeld.components.question_answerer module
+********************************************
+
+This module contains the question answerer component of MindMeld.
+
+class mindmeld.components.question_answerer.FieldInfo(name, field_type)
+
+   Bases: "object"
+
+   This class models an information source of a knowledge base field
+   metadata
+
+   get_name()
+
+      Returns knowledge base field name
+
+   get_type()
+
+      Returns knowledge base field type
+
+   is_date_field()
+
+      Returns True if the knowledge base field is a date field,
+      otherwise returns False
+
+   is_location_field()
+
+      Returns True if the knowledge base field is a location field,
+      otherwise returns False
+
+   is_number_field()
+
+      Returns True if the knowledge base field is a number field,
+      otherwise returns False
+
+   is_text_field()
+
+      Returns True if the knowledge base field is a text, otherwise
+      returns False
+
+   DATE_TYPES = {'date'}
+
+   GEO_TYPES = {'geo_point'}
+
+   NUMBER_TYPES = {'integer', 'double', 'float', 'half_float', 'byte', 'short', 'scaled_float', 'long'}
+
+   TEXT_TYPES = {'text', 'keyword'}
+
+class mindmeld.components.question_answerer.QuestionAnswerer(app_path, resource_loader=None, es_host=None)
+
+   Bases: "object"
+
+   The question answerer is primarily an information retrieval system
+   that provides all the necessary functionality for interacting with
+   the application’s knowledge base.
+
+   build_search(index, ranking_config=None)
+
+      Build a search object for advanced filtered search.
+
+      Parameters:
+         * **index** (*str*) – index name of knowledge base object.
+
+         * **ranking_config** (*dict*) – overriding ranking
+           configuration parameters.
+
+      Returns:
+         a Search object for filtered search.
+
+      Return type:
+         Search
+
+   config(config)
+
+      Summary
+
+      Parameters:
+         **config** – Description
+
+   get(index, **kwargs)
+
+      Gets a collection of documents from the knowledge base matching
+      the provided search criteria. This API provides a simple
+      interface for developers to specify a list of knowledge base
+      field and query string pairs to find best matches in a similar
+      way as in common Web search interfaces. The knowledge base
+      fields to be used depend on the mapping between NLU entity types
+      and corresponding knowledge base objects. For example, a
+      “cuisine” entity type can be mapped to either a knowledge base
+      object or an attribute of a knowledge base object. The mapping
+      is often application specific and is dependent on the data model
+      developers choose to use when building the knowledge base.
+
+      -[ Examples ]-
+
+      >>> question_answerer.get(index='menu_items',
+                                name='pork and shrimp',
+                                restaurant_id='B01CGKGQ40',
+                                _sort='price',
+                                _sort_type='asc')
+
+      Parameters:
+         * **index** (*str*) – The name of an index.
+
+         * **id** (*str*) – The id of a particular document to
+           retrieve.
+
+         * **_sort** (*str*) – Specify the knowledge base field for
+           custom sort.
+
+         * **_sort_type** (*str*) – Specify custom sort type. Valid
+           values are ‘asc’, ‘desc’ and ‘distance’.
+
+         * **_sort_location** (*dict*) – The origin location to be
+           used when sorting by distance.
+
+      Returns:
+         A list of matching documents.
+
+      Return type:
+         list
+
+   classmethod load_kb(app_namespace, index_name, data_file, es_host=None, es_client=None, connect_timeout=2)
+
+      Loads documents from disk into the specified index in the
+      knowledge base. If an index with the specified name doesn’t
+      exist, a new index with that name will be created in the
+      knowledge base.
+
+      Parameters:
+         * **app_namespace** (*str*) – The namespace of the app.
+           Used to prevent collisions between the indices of this app
+           and those of other apps.
+
+         * **index_name** (*str*) – The name of the new index to be
+           created.
+
+         * **data_file** (*str*) – The path to the data file
+           containing the documents to be imported into the knowledge
+           base index. It could be either json or jsonl file.
+
+         * **es_host** (*str*) – The Elasticsearch host server.
+
+         * **es_client** (*Elasticsearch*) – The Elasticsearch
+           client.
+
+         * **connect_timeout** (*int**, **optional*) – The amount of
+           time for a connection to the Elasticsearch host.
+
+class mindmeld.components.question_answerer.Search(client, index, ranking_config=None, field_info=None)
+
+   Bases: "object"
+
+   This class models a generic filtered search in knowledge base. It
+   allows developers to construct more complex knowledge base search
+   criteria based on the application requirements.
+
+   class Clause
+
+      Bases: "abc.ABC"
+
+      This class models an abstract knowledge base clause.
+
+      build_query()
+
+         Build knowledge base query.
+
+      get_type()
+
+         Returns clause type
+
+      validate()
+
+         Validate the clause.
+
+   class FilterClause(field, field_info=None, value=None, range_gt=None, range_gte=None, range_lt=None, range_lte=None)
+
+      Bases: "mindmeld.components.question_answerer.Clause"
+
+      This class models a knowledge base filter clause.
+
+      build_query()
+
+         build knowledge base query for filter clause
+
+      validate()
+
+   class QueryClause(field, field_info, value, synonym_field=None)
+
+      Bases: "mindmeld.components.question_answerer.Clause"
+
+      This class models a knowledge base query clause.
+
+      build_query()
+
+         build knowledge base query for query clause
+
+      validate()
+
+      DEFAULT_EXACT_MATCH_BOOSTING_WEIGHT = 100
+
+   class SortClause(field, field_info=None, sort_type=None, field_stats=None, location=None)
+
+      Bases: "mindmeld.components.question_answerer.Clause"
+
+      This class models a knowledge base sort clause.
+
+      build_query()
+
+         build knowledge base query for sort clause
+
+      validate()
+
+      DEFAULT_SORT_WEIGHT = 30
+
+      SORT_DISTANCE = 'distance'
+
+      SORT_ORDER_ASC = 'asc'
+
+      SORT_ORDER_DESC = 'desc'
+
+      SORT_TYPES = {'asc', 'desc', 'distance'}
+
+   execute()
+
+      Executes the knowledge base search with provided criteria and
+      returns matching documents.
+
+      Returns:
+         a list of matching documents.
+
+   filter(**kwargs)
+
+      Specify filter condition to be applied to specified knowledge
+      base field. In MindMeld two types of filters are supported: text
+      filter and range filters.
+
+      Text filters are used to apply hard filters on specified
+      knowledge base text fields. The filter text value is normalized
+      and matched using entire text span against the knowledge base
+      field.
+
+      It’s common to have filter conditions based on other resolved
+      canonical entities. For example, in food ordering domain the
+      resolved restaurant entity can be used as a filter to resolve
+      dish entities. The exact knowledge base field to apply these
+      filters depends on the knowledge base data model of the
+      application.
+
+      Range filters are used to filter with a value range on specified
+      knowledge base number or date fields. Example use cases include
+      price range filters and date range filters.
+
+      Examples:
+
+      add text filter:
+         >>> s = question_answerer.build_search(index='menu_items')
+         >>> s.filter(restaurant_id='B01CGKGQ40')
+
+      add range filter:
+         >>> s = question_answerer.build_search(index='menu_items')
+         >>> s.filter(field='price', gte=1, lt=10)
+
+      Parameters:
+         * **kwargs** – A keyword argument to specify the filter
+           text and the knowledge base text field.
+
+         * **field** (*str*) – knowledge base field name for range
+           filter.
+
+         * **gt** (*number** or **str*) – range filter operator for
+           greater than.
+
+         * **gte** (*number** or **str*) – range filter operator for
+           greater than or equal to.
+
+         * **lt** (*number** or **str*) – range filter operator for
+           less than.
+
+         * **lte** (*number** or **str*) – range filter operator for
+           less or equal to.
+
+      Returns:
+         A new Search object with added search criteria.
+
+      Return type:
+         Search
+
+   query(**kwargs)
+
+      Specify the query text to match on a knowledge base text field.
+      The query text is normalized and processed to find matches in
+      knowledge base using several text relevance scoring factors
+      including exact matches, phrase matches and partial matches.
+
+      -[ Examples ]-
+
+      >>> s = question_answerer.build_search(index='dish')
+      >>> s.query(name='pad thai')
+
+      In the example above the query text “pad thai” will be used to
+      match against document field “name” in knowledge base index
+      “dish”.
+
+      Parameters:
+         **keyword argument to specify the query text and the
+         knowledge base document field.** (*a*) –
+
+      Returns:
+         a new Search object with added search criteria.
+
+      Return type:
+         Search
+
+   sort(field, sort_type=None, location=None)
+
+      Specify custom sort criteria.
+
+      Parameters:
+         * **field** (*str*) – knowledge base field for sort.
+
+         * **sort_type** (*str*) – sorting type. valid values are
+           ‘asc’, ‘desc’ and ‘distance’. ‘asc’ and ‘desc’ can be used
+           to sort numeric or date fields and ‘distance’ can be used
+           to sort by distance on geo_point fields. Default sort type
+           is ‘desc’ if not specified.
+
+         * **location** (*str*) – location (lat, lon) in geo_point
+           format to be used as origin when sorting by ‘distance’
+
+   SYN_FIELD_SUFFIX = '$whitelist'

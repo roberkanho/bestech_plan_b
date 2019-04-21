@@ -1,0 +1,153 @@
+mindmeld.models.taggers.lstm module
+***********************************
+
+class mindmeld.models.taggers.lstm.LstmModel(**parameters)
+
+   Bases: "mindmeld.models.taggers.taggers.Tagger"
+
+   This class encapsulates the bi-directional LSTM model and provides
+   the correct interface for use by the tagger model
+
+   apply_convolution(input_tensor, batch_size, char_window_size)
+
+      Constructs a convolution network of a specific window size
+
+      Parameters:
+         * **input_tensor** (*tensor*) – The input tensor to the
+           network
+
+         * **batch_size** (*int*) – The batch size of the training
+           data
+
+         * **char_window_size** (*int*) – The character window size
+           of each stride
+
+      Returns:
+         Convolved output tensor
+
+      Return type:
+         (Tensor)
+
+   construct_feed_dictionary(batch_examples, batch_char, batch_gaz, batch_seq_len, batch_labels=[])
+
+      Constructs the feed dictionary that is used to feed data into
+      the tensors
+
+      Parameters:
+         * **batch_examples** (*ndarray*) – A batch of examples
+
+         * **batch_char** (*ndarray*) – A batch of character
+           features
+
+         * **batch_gaz** (*ndarray*) – A batch of gazetteer features
+
+         * **batch_seq_len** (*ndarray*) – A batch of sequence
+           length of each query
+
+         * **batch_labels** (*ndarray*) – A batch of labels
+
+      Returns:
+         The feed dictionary
+
+   construct_tf_variables()
+
+      Constructs the variables and operations in the TensorFlow
+      session graph
+
+   dump(path, config)
+
+      Saves the Tensorflow model
+
+      Parameters:
+         * **path** (*str*) – the folder path for the entity model
+           folder
+
+         * **config** (*dict*) – The model config
+
+   extract_features(examples, config, resources, y=None, fit=True)
+
+      Transforms a list of examples into features that are then used
+      by the deep learning model.
+
+      Parameters:
+         * **examples** (*list of mindmeld.core.Query*) – a list of
+           queries
+
+         * **config** (*ModelConfig*) – The ModelConfig which may
+           contain information used for feature extraction
+
+         * **resources** (*dict*) – Resources which may be used for
+           this model’s feature extraction
+
+         * **y** (*list*) – A list of label sequences
+
+      Returns:
+         features for the LSTM network
+
+      Return type:
+         (sequence_embeddings, encoded_labels, groups)
+
+   fit(X, y)
+
+   get_params(deep=True)
+
+   load(path)
+
+      Loads the Tensorflow model
+
+      Parameters:
+         **path** (*str*) – the folder path for the entity model
+         folder
+
+   predict(X, dynamic_resource=None)
+
+   set_params(**parameters)
+
+      Initialize params for the LSTM. The keys in the parameters
+      dictionary are as follows:
+
+      Parameters:
+         * **parameters** (*dict*) – The keys in the parameters
+           dictionary are as follows:
+
+         * **number_of_epochs** – The number of epochs to run (int)
+
+         * **batch_size** – The batch size for mini-batch training
+           (int)
+
+         * **token_lstm_hidden_state_dimension** – The hidden state
+           dimension of the LSTM cell (int)
+
+         * **learning_rate** – The learning rate of the optimizer
+           (int)
+
+         * **optimizer** – The optimizer used to train the network
+           is the number of entities in the dataset (str)
+
+         * **display_epoch** – The number of epochs after which the
+           network displays common stats like accuracy (int)
+
+         * **padding_length** – The length of each query, which is
+           fixed, so some queries will be cut short in length
+           representing the word embedding, the row index is the
+           word’s index (int)
+
+         * **token_embedding_dimension** – The embedding dimension
+           of the word (int)
+
+         * **token_pretrained_embedding_filepath** – The pretrained
+           embedding file-path (str)
+
+         * **dense_keep_prob** – The dropout rate of the dense
+           layers (float)
+
+         * **lstm_input_keep_prob** – The dropout rate of the inputs
+           to the LSTM cell (float)
+
+         * **lstm_output_keep_prob** – The dropout rate of the
+           outputs of the LSTM cell (float)
+
+         * **gaz_encoding_dimension** – The gazetteer encoding
+           dimension (int)
+
+   setup_model(config)

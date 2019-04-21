@@ -1,0 +1,495 @@
+mindmeld.core module
+********************
+
+This module contains a collection of the core data structures used in
+MindMeld.
+
+class mindmeld.core.Bunch(**kwargs)
+
+   Bases: "dict"
+
+   Dictionary-like object that exposes its keys as attributes.
+
+   Inspired by scikit learn’s Bunches
+
+   >>> b = Bunch(a=1, b=2)
+   >>> b['b']
+   2
+   >>> b.b
+   2
+   >>> b.a = 3
+   >>> b['a']
+   3
+   >>> b.c = 6
+   >>> b['c']
+   6
+
+class mindmeld.core.Entity(text, entity_type, role=None, value=None, display_text=None, confidence=None)
+
+   Bases: "object"
+
+   An Entity is any important piece of text that provides more
+   information about the user intent.
+
+   text
+
+      *str* – The text contents that span the entity
+
+   type
+
+      *str* – The type of the entity
+
+   role
+
+      *str* – The role of the entity
+
+   value
+
+      *str* – The resolved value of the entity
+
+   display_text
+
+      *str* – A human readable text representation of the entity for
+      use in natural language responses.
+
+   confidence
+
+      *float* – A confidence value from 0 to 1 about how confident the
+      entity recognizer was for the given class label.
+
+   is_system_entity
+
+      *bool* – True if the entity is a system entity
+
+   static is_system_entity(entity_type)
+
+      Checks whether the provided entity type is a MindMeld-recognized
+      system entity.
+
+      Parameters:
+         **entity_type** (*str*) – An entity type
+
+      Returns:
+         True if the entity is a system entity type, else False
+
+      Return type:
+         bool
+
+   to_dict()
+
+      Converts the entity into a dictionary
+
+class mindmeld.core.NestedEntity(texts, spans, token_spans, entity, children=None)
+
+   Bases: "object"
+
+   An entity with the context of the query it came from, along with
+   information like the entity’s parent and children.
+
+   texts
+
+      *tuple* – Tuple containing the three forms of text: raw text,
+      processed text, and normalized text
+
+   spans
+
+      *tuple* – Tuple containing the character index spans of the
+      text for this entity for each text form
+
+   token_spans
+
+      *tuple* – Tuple containing the token index spans of the
+      text for this entity for each text form
+
+   entity
+
+      *Entity* – The entity object
+
+   parent
+
+      *NestedEntity* – The parent of the nested entity
+
+   children
+
+      *tuple of NestedEntity* – A tuple of children nested entities
+
+   classmethod from_query(query, span=None, normalized_span=None, entity_type=None, role=None, entity=None, parent_offset=None, children=None)
+
+      Creates an entity node using a parent entity node
+
+      Parameters:
+         * **query** (*Query*) – Description
+
+         * **span** (*Span*) – The span of the entity in the query’s
+           raw text
+
+         * **normalized_span** (*None**, **optional*) – The span of
+           the entity in the query’s normalized text
+
+         * **entity_type** (*str**, **optional*) – The entity type.
+           One of this and entity must be provided
+
+         * **role** (*str**, **optional*) – The entity role. Ignored
+           if entity is provided.
+
+         * **entity** (*Entity**, **optional*) – The entity. One of
+           this and entity must be provided
+
+         * **parent_offset** (*int*) – The offset of the parent in
+           the query
+
+         * **children** (*None**, **optional*) – Description
+
+      Returns:
+         the created entity
+
+   to_dict()
+
+      Converts the query entity into a dictionary
+
+   with_children(children)
+
+      Creates a copy of this entity with the provided children
+
+   normalized_span
+
+      The span of the normalized text span
+
+   normalized_text
+
+      The normalized input text
+
+   normalized_token_span
+
+      The token_span of the normalized text span
+
+   processed_span
+
+      The span of the preprocessed text span
+
+   processed_text
+
+      The input text after it has been preprocessed
+
+   processed_token_span
+
+      The token_span of the preprocessed text span
+
+   span
+
+      The span of original input text span
+
+   text
+
+      The original input text span
+
+   token_span
+
+      The token_span of original input text span
+
+class mindmeld.core.ProcessedQuery(query, domain=None, intent=None, entities=None, is_gold=False, nbest_transcripts_queries=None, nbest_transcripts_entities=None, nbest_aligned_entities=None, confidence=None)
+
+   Bases: "object"
+
+   A processed query contains a query and the additional metadata that
+   has been labeled or predicted.
+
+   query
+
+      *Query* – The underlying query object.
+
+   domain
+
+      *str* – The domain of the query
+
+   entities
+
+      *list* – A list of entities present in this query
+
+   intent
+
+      *str* – The intent of the query
+
+   is_gold
+
+      *bool* – Indicates whether the details in this query were
+      predicted or human labeled
+
+   nbest_transcripts_queries
+
+      *list* – A list of n best transcript queries
+
+   nbest_transcripts_entities
+
+      *list* – A list of lists of entities for each query
+
+   nbest_aligned_entities
+
+      *list* – A list of lists of aligned entities
+
+   confidence
+
+      *dict* – A dictionary of the class probas for the domain and
+      intent classifier
+
+   to_dict()
+
+      Converts the processed query into a dictionary
+
+class mindmeld.core.Query(raw_text, processed_text, normalized_tokens, char_maps, language=None, time_zone=None, timestamp=None, stemmed_tokens=None)
+
+   Bases: "object"
+
+   The query object is responsible for processing and normalizing raw
+   user text input so that classifiers can deal with it. A query
+   stores three forms of text: raw text, processed text, and
+   normalized text. The query object is also responsible for
+   translating text ranges across these forms.
+
+   raw_text
+
+      *str* – the original input text
+
+   processed_text
+
+      *str* – the text after it has been preprocessed. The pre-
+      processing happens at the application level and is generally
+      used for special characters
+
+   normalized_tokens
+
+      *tuple of str* – a list of normalized tokens
+
+   system_entity_candidates
+
+      *tuple* – A list of system entities extracted from the text
+
+   language
+
+      *str* – Language of the query specified using a 639-2 code
+
+   time_zone
+
+      *str* – The IANA id for the time zone in which the query
+      originated such as ‘America/Los_Angeles’
+
+   timestamp
+
+      *long, optional* – A unix timestamp used as the reference time
+      If not specified, the current system time is used. If
+      *time_zone* is not also specified, this parameter is ignored
+
+   stemmed_tokens
+
+      *list* – A sequence of stemmed tokens for the query text
+
+   get_system_entity_candidates(sys_types)
+
+      Parameters:
+         **sys_types** (*set of str*) – A set of entity types to
+         select
+
+      Returns:
+         Returns candidate system entities of the types specified
+
+      Return type:
+         list
+
+   get_text_form(form)
+
+      Programmatically retrieves text by form
+
+      Parameters:
+         **form** (*int*) – A valid text form (TEXT_FORM_RAW,
+         TEXT_FORM_PROCESSED, or TEXT_FORM_NORMALIZED)
+
+      Returns:
+         The requested text
+
+      Return type:
+         str
+
+   transform_index(index, form_in, form_out)
+
+      Transforms a text index from one form to another.
+
+      Parameters:
+         * **index** (*int*) – the index being transformed
+
+         * **form_in** (*int*) – the input form. should be one of
+           TEXT_FORM_RAW
+
+         * **form_out** (*int*) – the output form
+
+      Returns:
+         the equivalent index of text in the output form
+
+      Return type:
+         int
+
+   transform_span(text_span, form_in, form_out)
+
+      Transforms a text range from one form to another.
+
+      Parameters:
+         * **text_span** (*Span*) – the text span being transformed
+
+         * **form_in** (*int*) – the input text form. Should be one
+           of TEXT_FORM_RAW, TEXT_FORM_PROCESSED or
+           TEXT_FORM_NORMALIZED
+
+         * **form_out** (*int*) – the output text form. Should be
+           one of TEXT_FORM_RAW, TEXT_FORM_PROCESSED or
+           TEXT_FORM_NORMALIZED
+
+      Returns:
+         the equivalent range of text in the output form
+
+      Return type:
+         tuple
+
+   language
+
+      Language of the query specified using a 639-2 code.
+
+   normalized_text
+
+      The normalized input text
+
+   normalized_tokens
+
+      The tokens of the normalized input text
+
+   processed_text
+
+      The input text after it has been preprocessed
+
+   stemmed_text
+
+      The stemmed input text
+
+   text
+
+      The original input text
+
+   time_zone
+
+      The IANA id for the time zone in which the query originated such
+      as ‘America/Los_Angeles’.
+
+   timestamp
+
+      A unix timestamp for when the time query was created. If
+      *time_zone* is None, this parameter is ignored.
+
+class mindmeld.core.QueryEntity(texts, spans, token_spans, entity, children=None)
+
+   Bases: "mindmeld.core.NestedEntity"
+
+   An entity with the context of the query it came from.
+
+   text
+
+      *str* – The raw text that was processed into this entity
+
+   processed_text
+
+      *str* – The processed text that was processed into this entity
+
+   normalized_text
+
+      *str* – The normalized text that was processed into this entity
+
+   span
+
+      *Span* – The character index span of the raw text that was
+      processed into this entity
+
+   processed_span
+
+      *Span* – The character index span of the raw text that was
+      processed into this entity
+
+   span
+
+      *Span* – The character index span of the raw text that was
+      processed into this entity
+
+   start
+
+      *int* – The character index start of the text range that was
+      processed into this entity. This index is based on the
+      normalized text of the query passed in.
+
+   end
+
+      *int* – The character index end of the text range that was
+      processed into this entity. This index is based on the
+      normalized text of the query passed in.
+
+class mindmeld.core.Span(start, end)
+
+   Bases: "object"
+
+   Object representing a text span with start and end indices
+
+   start
+
+      *int* – The index from the original text that represents the
+      start of the span
+
+   end
+
+      *int* – The index from the original text that represents the end
+      of the span
+
+   shift(offset)
+
+      Shifts a span by offset
+
+      Parameters:
+         **offset** (*int*) – The number to change start and end by
+
+   slice(obj)
+
+      Returns the slice of the object for this span
+
+      Parameters:
+         **obj** – The object to slice
+
+      Returns:
+         The slice of the passed in object for this span
+
+   to_dict()
+
+      Converts the span into a dictionary
+
+   end
+
+   start
+
+mindmeld.core.resolve_entity_conflicts(query_entities)
+
+   This method takes a list containing query entities for a query, and
+   resolves any entity conflicts. The resolved list is returned.
+
+   If two entities in a query conflict with each other, use the
+   following logic:
+      * If the target entity is a subset of another entity, then
+        delete the target entity.
+
+      * If the target entity shares the identical span as another
+        entity, then keep the one with the highest confidence.
+
+      * If the target entity overlaps with another entity, then keep
+        the one with the highest confidence.
+
+   Parameters:
+      **entities** (*list of QueryEntity*) – A list of query entities
+      to resolve
+
+   Returns:
+      A filtered list of query entities
+
+   Return type:
+      list of QueryEntity

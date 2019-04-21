@@ -1,0 +1,46 @@
+mindmeld
+********
+
+* mindmeld package
+
+  * Subpackages
+
+    * mindmeld.components package
+
+      * Submodules
+
+    * mindmeld.models package
+
+      * Subpackages
+
+      * Submodules
+
+  * Submodules
+
+    * mindmeld.app module
+
+    * mindmeld.app_manager module
+
+    * mindmeld.core module
+
+    * mindmeld.exceptions module
+
+    * mindmeld.gazetteer module
+
+    * mindmeld.markup module
+
+    * mindmeld.path module
+
+    * mindmeld.query_cache module
+
+    * mindmeld.query_factory module
+
+    * mindmeld.resource_loader module
+
+    * mindmeld.ser module
+
+    * mindmeld.server module
+
+    * mindmeld.system_entity_recognizer module
+
+    * mindmeld.tokenizer module

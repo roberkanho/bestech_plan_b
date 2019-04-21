@@ -1,0 +1,284 @@
+mindmeld.models.taggers.taggers module
+**************************************
+
+This module contains all code required to perform sequence tagging.
+
+class mindmeld.models.taggers.taggers.BoundaryCounts
+
+   Bases: "object"
+
+   This class stores the counts of the boundary evaluation metrics.
+
+   le
+
+      *int* – Label error count. This is when the span is the same but
+      the entity label is incorrect
+
+   be
+
+      *int* – Boundary error count. This is when the entity type is
+      correct but the span is incorrect
+
+   lbe
+
+      *int* – Label boundary error count. This is when both the entity
+      type and span are incorrect, but there was an entity predicted
+
+   tp
+
+      *int* – True positive count. When an entity was correctly
+      predicted
+
+   tn
+
+      *int* – True negative count. Count of times it was correctly
+      predicted that there is no entity
+
+   fp
+
+      *int* – False positive count. When an entity was predicted but
+      one shouldn’t have been
+
+   fn
+
+      *int* – False negative count. When an entity was not predicted
+      where one should have been
+
+   to_dict()
+
+      Converts the object to a dictionary
+
+class mindmeld.models.taggers.taggers.Tagger(**parameters)
+
+   Bases: "object"
+
+   A class for all sequence tagger models implemented in house. It is
+   importent to follow this interface exactly when implementing a new
+   model so that your model is configured and trained as expected in
+   the MindMeld pipeline. Note that this follows the sklearn estimator
+   interface so that GridSearchCV can be used on our sequence models.
+
+   static dump(model_path, config)
+
+      Since traditional SKLearn models are easily serializable, we can
+      use JobLib to serialize them. So we alter the context object to
+      make this explicit.
+
+      Parameters:
+         **model_path** (*str*) – The path to dump the model to
+
+      Returns:
+         The altered config object
+
+      Return type:
+         config (dict)
+
+   extract_and_predict(examples, config, resources)
+
+      Does both feature extraction and prediction. Often necessary for
+      sequence models when the prediction of the previous example is
+      used as a feature for the next example. If this is not the case,
+      extract is simply called before predict here. Note that the
+      MindMeld config and resources are passed in each time to make
+      the underlying model implementation stateless.
+
+      Parameters:
+         * **examples** (*list of mindmeld.core.Query*) – A list of
+           queries to extract features for and predict
+
+         * **config** (*ModelConfig*) – The ModelConfig which may
+           contain information used for feature extraction
+
+         * **resources** (*dict*) – Resources which may be used for
+           this model’s feature extraction
+
+      Returns:
+         A list of predicted labels (in encoded format)
+
+      Return type:
+         (list of classification labels)
+
+   extract_features(examples, config, resources)
+
+      Extracts all features from a list of MindMeld examples.
+      Processes the data and returns the features in the format that
+      is expected as an input to fit(). Note that the MindMeld config
+      and resources are passed in each time to make the underlying
+      model implementation stateless.
+
+      Parameters:
+         * **examples** (*list of mindmeld.core.Query*) – A list of
+           queries to extract features for
+
+         * **config** (*ModelConfig*) – The ModelConfig which may
+           contain information used for feature extraction
+
+         * **resources** (*dict*) – Resources which may be used for
+           this model’s feature extraction
+
+      Returns:
+         tuple containing:
+
+            * (list of feature vectors): X
+
+            * (list of labels): y
+
+            * (list of groups): A list of groups to be used for
+              splitting with                     sklearn GridSearchCV
+
+      Return type:
+         (tuple)
+
+   fit(X, y)
+
+      Trains the model. X and y are the format of what is returned by
+      extract_features. There is no restriction on their type or
+      content. X should be the fully processed data with extracted
+      features that are ready to be used to train the model. y should
+      be a list of classes as encoded by the label_encoder
+
+      Parameters:
+         * **X** (*list*) – Generally a list of feature vectors, one
+           for each training example
+
+         * **y** (*list*) – A list of classification labels (encoded
+           by the label_encoder, NOT MindMeld entity objects)
+
+      Returns:
+         self
+
+   get_params(deep=True)
+
+      Gets a dictionary of all of the current model parameters and
+      their values
+
+      Parameters:
+         **deep** (*bool*) – Not used, needed for sklearn
+         compatibility
+
+      Returns:
+         A dictionary of the model parameter names as keys and their
+         set values
+
+      Return type:
+         (dict)
+
+   static load(model_path)
+
+      Load the model state to memory. This is a no-op since we do not
+      have to do anything special to load default serializable models
+      for SKLearn.
+
+      Parameters:
+         **model_path** (*str*) – The path to dump the model to
+
+   predict(X, dynamic_resource=None)
+
+      Predicts the labels from a feature matrix X. Again X is the
+      format of what is returned by extract_features.
+
+      Parameters:
+         **X** (*list*) – A list of feature vectors, one for each
+         example
+
+      Returns:
+         a list of predicted labels (in an encoded format)
+
+      Return type:
+         (list of classification labels)
+
+   predict_proba(examples, config, resources)
+
+      Parameters:
+         * **examples** (*list of mindmeld.core.Query*) – A list of
+           queries to extract features for and predict
+
+         * **config** (*ModelConfig*) – The ModelConfig which may
+           contain information used for feature extraction
+
+         * **resources** (*dict*) – Resources which may be used for
+           this model’s feature extraction
+
+      Returns:
+         A list of predicted labels (in encoded format) and confidence
+         scores
+
+      Return type:
+         (list of lists)
+
+   set_params(**parameters)
+
+      Sets the model parameters. Defaults should be set for all
+      parameters such that a model is initialized with reasonable
+      default parameters if none are explicitly passed in.
+
+      Parameters:
+         ****parameters** – Arbitrary keyword arguments. The keys are
+         model parameter names and the values are what they should be
+         set to
+
+      Returns:
+         self
+
+   setup_model(config)
+
+      “Not implemented.
+
+mindmeld.models.taggers.taggers.extract_sequence_features(example, example_type, feature_config, resources)
+
+   Extracts feature dicts for each token in an example.
+
+   Parameters:
+      * **example** (*mindmeld.core.Query*) – a query
+
+      * **example_type** (*str*) – The type of example
+
+      * **feature_config** (*dict*) – The config for features
+
+      * **resources** (*dict*) – Resources of this model
+
+   Returns:
+      features
+
+   Return type:
+      (list of dict)
+
+mindmeld.models.taggers.taggers.get_boundary_counts(expected_sequence, predicted_sequence, boundary_counts)
+
+   Gets the boundary counts for the expected and predicted sequence of
+   entities.
+
+mindmeld.models.taggers.taggers.get_entities_from_tags(query, tags)
+
+   From a set of joint IOB tags, parse the app and system entities.
+
+   This performs the reverse operation of get_tags_from_entities.
+
+   Parameters:
+      * **query** (*Query*) – Any query instance.
+
+      * **tags** (*list of str*) – Joint app and system tags, like
+        those created by get_tags_from_entities.
+
+   Returns:
+      (list of QueryEntity) The tuple containing the list of entities.
+
+mindmeld.models.taggers.taggers.get_tags_from_entities(query, entities, scheme='IOB')
+
+   Get joint app and system IOB tags from a query’s entities.
+
+   Parameters:
+      * **query** (*Query*) – A query instance.
+
+      * **entities** (*List of QueryEntity*) – A list of queries
+        found in the query
+
+   Returns:
+      The tags for each token in the query. A tag has four
+      parts separated by ‘|’. The first two are the IOB status for
+      app entities followed by the type of app entity or
+      ‘’ if the IOB status is ‘O’. The last two are like the first
+      two,             but for system entities.
+
+   Return type:
+      (list of str)

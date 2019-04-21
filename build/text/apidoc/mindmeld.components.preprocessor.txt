@@ -1,0 +1,36 @@
+mindmeld.components.preprocessor module
+***************************************
+
+This module contains a preprocessor base class.
+
+class mindmeld.components.preprocessor.Preprocessor
+
+   Bases: "abc.ABC"
+
+   Base class for Preprocessor object
+
+   get_char_index_map(raw_text, processed_text)
+
+      Generates character index mapping from processed query to raw
+      query.
+
+      See the Tokenizer class for a similar implementation.
+
+      Parameters:
+         * **raw_text** (*str*) –
+
+         * **processed_text** (*str*) –
+
+      Returns:
+         A tuple consisting of two maps, forward and backward
+
+      Return type:
+         (dict, dict)
+
+   process(text)
+
+      Parameters:
+         **text** (*str*) –
+
+      Returns:
+         (str)

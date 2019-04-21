@@ -582,6 +582,9 @@ button {
 		background-position: center 36px
 	}
 }
+.section-slogan .slogan {
+    margin-right: 10%;
+}
 .section-functionalities {
 	padding: .85rem 0 1.97rem;
 	text-align: center

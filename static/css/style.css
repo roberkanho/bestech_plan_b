@@ -219,6 +219,10 @@ button {
 	.mobile-hidden {
 		display: none!important
 	}
+	#header .header {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
 }
 @media (min-width:640px) {
 	html {
@@ -432,9 +436,9 @@ button {
 }
 .btn {
 	padding: .2rem .5rem;
-	font-size: .25rem;
+	font-size: 20px;
 	text-align: center;
-	line-height: 1.4
+	line-height: 1.4;
 /*	color: #006da1;
 	background: #FFFFFF;
 */
@@ -902,12 +906,18 @@ button {
 		font-size: 14px
 	}
 	.btn {
-		padding: 20px 30px;
-	    border-radius: 10px;
-	    font-size: 20px;
+		padding: 13px 22px;
+	    border-radius: 6px;
+	    font-size: 15px;
 	    margin-top: 20px;
 	    margin-bottom: 20px;
 	}
+	#header .header .logo-wrapper img {
+    	max-width: 80px!important;
+	}
+	#header .header .navi-list img {
+    	max-width: 100px!important;
+	}	
 }
 #header {
 	position: relative
@@ -925,7 +935,7 @@ button {
 	left: 0;
 	width: 100%;
 	height: 1.3rem;
-	z-index: 9
+	z-index: 9;
 }
 #header .header .logo-wrapper img {
 	max-width: 170px;
@@ -1066,7 +1076,7 @@ button {
 	transition: transform .2s, -webkit-transform .2s
 }
 #header .menu-icon-hmbg-top__rotate {
-	-webkit-transform: rotate(45deg);
+	-webkit-transform: rotate(45deg)
 	transform: rotate(45deg)
 }
 #header .menu-icon-hmbg-bottom__rotate, #header .menu-icon-hmbg-top__rotate {
@@ -1079,12 +1089,14 @@ button {
 	-webkit-transform: rotate(-45deg);
 	transform: rotate(-45deg)
 }
+/*
 @media (min-width:1300px) {
 	#header .container-t1 {
 		padding-left: 2.5rem;
 		padding-right: 2.5rem
 	}
 }
+*/
 .tutorial {
 	height: 100vh;
 	background-color: #f6f6f6
@@ -1170,6 +1182,11 @@ button {
 	.tutorial .content-container .content-anchor, .tutorial .content-container .content .content-detail, .tutorial .content-container .content h1 {
 		padding: .32rem .42rem
 	}
+}
+@media (min-width:640px) and (max-width:920px){
+	#header .header {
+    margin: 10px 0;
+}
 }
 @media (min-width:840px) {
 	.tutorial .left-side {
@@ -5708,7 +5725,7 @@ body.desktop .q-stepper-tab.step-navigation:hover {
 .block {
 	display: block!important;
 	margin: auto;
-	width: 80%;
+	width: 70%;
 }
 .inline-block {
 	display: inline-block!important
@@ -6325,11 +6342,26 @@ body.cordova .cordova-hide, body.desktop .desktop-hide, body.electron .electron-
 	.gt-lg, .gt-md, .lg, .lt-md, .lt-sm, .md-hide, .sm, .xl, .xs {
 		display: none!important
 	}
+	#header .header {
+    padding-top: 10px;
+	}
+	#header .header .logo-wrapper img {
+    	max-width: 100px!important;
+	}
+	#header .header .navi-list img {
+    	max-width: 140px!important;
+	}	
 }
 @media (min-width:992px) and (max-width:1199px) {
 	.gt-lg, .lg-hide, .lt-lg, .lt-md, .lt-sm, .md, .sm, .xl, .xs {
 		display: none!important
 	}
+	#header .header .logo-wrapper img {
+    	max-width: 120px!important;
+	}
+	#header .header .navi-list img {
+    	max-width: 120px!important;
+	}	
 }
 @media (min-width:1200px) {
 	.lg, .lt-lg, .lt-md, .lt-sm, .lt-xl, .md, .sm, .xl-hide, .xs {

@@ -916,6 +916,13 @@ button {
 	    margin-top: 20px;
 	    margin-bottom: 20px;
 	}
+	.section-content .btn {
+	    padding: 15px 20px;
+	    border-radius: 6px;
+	    font-size: 16px;
+	    margin-top: 20px;
+	    margin-bottom: 20px;
+	}
 	#header .header .logo-wrapper img {
     	max-width: 80px!important;
 	}

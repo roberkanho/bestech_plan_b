@@ -1948,6 +1948,8 @@ footer span.commit .rst-content tt,
 @media screen and (min-width: 1400px) {
     .wy-nav-content-wrap {
         background: white;
+        height: 100%;
+        overflow-y: scroll;
     }
     .wy-nav-content {
         margin-left: calc((100% - 994px) / 2 + 140px);
